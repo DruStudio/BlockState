@@ -27,6 +27,7 @@ padding:0;
 background:var(--bg);
 color:var(--text);
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+overflow-x:hidden;
 }
 
 /* PARTICLES */
@@ -45,19 +46,20 @@ width:100%;
 z-index:5;
 display:flex;
 justify-content:center;
-gap:30px;
-padding:16px 0;
+gap:32px;
+padding:10px 0;
 letter-spacing:.35em;
 font-size:.75rem;
 color:var(--muted);
 background:linear-gradient(to bottom, rgba(7,7,12,.9), rgba(7,7,12,0));
 }
+.nav a{color:inherit;text-decoration:none}
 
 /* PAGE */
 .container{
 position:relative;
 z-index:2;
-max-width:1100px;
+max-width:1200px;
 margin:0 auto;
 padding:90px 16px 120px;
 }
@@ -74,17 +76,15 @@ text-align:center;
 letter-spacing:.4em;
 font-size:.75rem;
 color:var(--muted);
-margin-bottom:32px;
+margin-bottom:28px;
 }
 
-/* GRID (DESKTOP) */
+/* GRID */
 .grid{
 display:grid;
 grid-template-columns:420px 1fr;
 gap:28px;
-align-items:start;
 }
-
 @media(max-width:900px){
 .grid{grid-template-columns:1fr}
 }
@@ -95,6 +95,14 @@ background:linear-gradient(135deg,var(--panel),#1d1d32);
 border:1px solid var(--border);
 border-radius:22px;
 padding:18px;
+}
+
+.section{
+text-align:center;
+letter-spacing:.4em;
+font-size:.75rem;
+color:var(--muted);
+margin-bottom:12px;
 }
 
 /* CREATE */
@@ -197,6 +205,7 @@ border-radius:50%;
 position:relative;
 top:4px;
 }
+
 .coin .name{font-size:1.6rem;font-weight:900}
 .coin .symbol{font-size:.75rem;color:var(--muted)}
 
@@ -256,19 +265,15 @@ cursor:pointer;
 }
 .copied{background:linear-gradient(135deg,var(--green),#16a34a)!important}
 
-/* FAQ */
-.footer-links{
-position:fixed;
-bottom:16px;
-left:16px;
-display:flex;
-gap:10px;
-font-size:.7rem;
+.caption{
+margin-top:10px;
+padding:14px;
+border-radius:14px;
+background:#10101a;
+border:1px solid var(--border);
+font-size:.85rem;
 color:var(--muted);
-opacity:0;
-transition:.3s;
 }
-.footer-links.show{opacity:1}
 </style>
 </head>
 
@@ -277,7 +282,7 @@ transition:.3s;
 <canvas id="particles"></canvas>
 
 <div class="nav">
-<a href="index.html" style="color:inherit;text-decoration:none">HOME</a>
+<a href="index.html">HOME</a>
 <span>CRYPTO</span>
 </div>
 
@@ -288,6 +293,7 @@ transition:.3s;
 <div class="grid">
 <!-- CREATE -->
 <div class="panel">
+<div class="section">CREATE</div>
 <input id="search" placeholder="Search crypto (Top 250)">
 <div class="presets" id="presets"></div>
 <button class="primary" onclick="App.generate()">Create BlockState</button>
@@ -302,28 +308,28 @@ transition:.3s;
 
 <!-- CAPTURE + SHARE -->
 <div>
+<div class="section">CAPTURE</div>
 <div id="output"></div>
 
 <div class="share panel">
+<div class="section">SHARE</div>
 <div class="share-buttons">
 <button onclick="App.saveImage()">Save BlockState</button>
 <button id="copyBtn" onclick="App.copyCaption()">Copy Caption</button>
 </div>
+<div class="caption" id="caption"></div>
 </div>
 </div>
 </div>
-
-<div class="footer-links" id="footer">
-<span>v1.0</span>
-<span>FAQ</span>
 </div>
 
 <script>
-/* PARTICLES – SAME INSTANCE */
+/* PARTICLES (shared state) */
 const c=document.getElementById("particles"),x=c.getContext("2d");
 let w,h;
 function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
 resize();addEventListener("resize",resize);
+
 if(!window.__particles){
 window.__particles=[];
 for(let i=0;i<70;i++)window.__particles.push({
@@ -351,7 +357,7 @@ async load(){
 const r=await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1");
 this.coins=await r.json();
 this.renderPresets();
-this.renderTrending();
+this.setMode('gainers');
 this.show(this.coins.find(c=>c.id==="bitcoin"));
 },
 renderPresets(){
@@ -380,7 +386,7 @@ trendList.innerHTML="";
 .forEach(c=>{
 const li=document.createElement("li");
 li.innerHTML=`
-<div class="left"><img src="${c.image}">${c.name}</div>
+<div class="left"><img src="${c.image}" crossorigin="anonymous">${c.name}</div>
 <span style="color:${c.price_change_percentage_24h>=0?'var(--green)':'var(--red)'}">
 ${c.price_change_percentage_24h.toFixed(2)}%
 </span>`;
@@ -388,10 +394,21 @@ li.onclick=()=>this.show(c);
 trendList.appendChild(li);
 });
 },
+priceDecimals(v){
+if(v>=100) return 2;
+if(v>=1) return 2;
+if(v>=0.01) return 4;
+return 6;
+},
 fmtPrice(v){
-if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-if(v>=0.01)return v.toFixed(4);
-return v.toFixed(8);
+return v.toLocaleString(undefined,{
+minimumFractionDigits:this.priceDecimals(v),
+maximumFractionDigits:this.priceDecimals(v)
+});
+},
+fmtChange(v, price){
+const d=this.priceDecimals(price);
+return v.toFixed(d);
 },
 fmtCap(v){
 if(v>=1e12)return(v/1e12).toFixed(2)+" T";
@@ -404,7 +421,7 @@ const up=c.price_change_percentage_24h>=0;
 output.innerHTML=`
 <div class="widget ${up?'positive':'negative'}" id="widget">
 <div class="coin">
-<img src="${c.image}">
+<img src="${c.image}" crossorigin="anonymous">
 <div>
 <div class="name">${c.name.length>18?c.symbol.toUpperCase():c.name}</div>
 <div class="symbol">${c.symbol.toUpperCase()}</div>
@@ -412,7 +429,7 @@ output.innerHTML=`
 </div>
 <div class="price">$${this.fmtPrice(c.current_price)}</div>
 <div class="change" style="color:${up?'var(--green)':'var(--red)'}">
-${up?'▲':'▼'} 24 hours ${c.price_change_percentage_24h.toFixed(2)}% ($${this.fmtPrice(c.price_change_24h)})
+${up?'▲':'▼'} ${c.price_change_percentage_24h.toFixed(2)}% ($${this.fmtChange(c.price_change_24h,c.current_price)})
 </div>
 <div class="stats">
 <div class="stat"><span>24H HIGH</span><strong>$${this.fmtPrice(c.high_24h)}</strong></div>
@@ -435,31 +452,33 @@ if(c)this.show(c);
 makeCaption(){
 const c=this.current;
 const up=c.price_change_percentage_24h>=0;
-this.caption=`${c.name} moved ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% over the past 24 hours ${up?'▲':'▼'} trading at $${this.fmtPrice(c.current_price)} with a market cap of ${this.fmtCap(c.market_cap)} #${c.symbol.toUpperCase()} #BlockState`;
+caption.textContent=
+`${c.name} moved ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${up?'▲':'▼'} trading at $${this.fmtPrice(c.current_price)} with a market cap of ${this.fmtCap(c.market_cap)} #${c.symbol.toUpperCase()} #BlockState`;
 },
 copyCaption(){
-navigator.clipboard.writeText(this.caption);
+navigator.clipboard.writeText(caption.textContent);
 copyBtn.classList.add("copied");
 copyBtn.textContent="Copied ✓";
 setTimeout(()=>{copyBtn.classList.remove("copied");copyBtn.textContent="Copy Caption"},1200);
 },
 saveImage(){
-html2canvas(document.getElementById("widget"),{backgroundColor:null,scale:2,useCORS:true}).then(c=>{
+const img=document.querySelector("#widget img");
+img.decode().then(()=>{
+html2canvas(document.getElementById("widget"),{
+backgroundColor:null,
+scale:2,
+useCORS:true
+}).then(c=>{
 const a=document.createElement("a");
 a.download="blockstate.png";
 a.href=c.toDataURL();
 a.click();
 });
+});
 }
 };
 
 document.addEventListener("DOMContentLoaded",()=>App.load());
-
-addEventListener("scroll",()=>{
-(innerHeight+scrollY)>=document.body.offsetHeight-40
-?footer.classList.add("show")
-:footer.classList.remove("show");
-});
 </script>
 
 </body>
