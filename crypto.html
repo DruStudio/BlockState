@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BlockState — Crypto</title>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+:root{
+--bg:#07070c;
+--panel:#141425;
+--panel2:#0f0f1a;
+--border:#2a2a3a;
+--text:#ffffff;
+--muted:#9aa0b4;
+--accent:#6c7cff;
+--green:#22c55e;
+--red:#ef4444;
+}
+
+*{box-sizing:border-box}
+html,body{
+margin:0;
+padding:0;
+background:var(--bg);
+color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+overflow-x:hidden;
+}
+
+/* PARTICLES */
+canvas{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
+}
+
+/* NAV */
+.nav{
+position:sticky;
+top:0;
+z-index:5;
+display:flex;
+justify-content:center;
+gap:28px;
+padding:18px 0;
+background:linear-gradient(to bottom, rgba(7,7,12,.85), rgba(7,7,12,0));
+backdrop-filter:blur(6px);
+letter-spacing:.35em;
+font-size:.75rem;
+color:var(--muted);
+}
+.nav a{
+color:inherit;
+text-decoration:none;
+}
+
+/* LAYOUT */
+.container{
+position:relative;
+z-index:2;
+max-width:420px;
+margin:0 auto;
+padding:40px 16px 120px;
+}
+
+h1{
+text-align:center;
+font-size:2.6rem;
+font-weight:900;
+color:var(--accent);
+margin-bottom:4px;
+}
+.subtitle{
+text-align:center;
+letter-spacing:.4em;
+font-size:.75rem;
+color:var(--muted);
+margin-bottom:28px;
+}
+
+.section{
+text-align:center;
+letter-spacing:.4em;
+font-size:.75rem;
+color:var(--muted);
+margin:26px 0 14px;
+}
+
+/* PANELS */
+.panel{
+background:linear-gradient(135deg,var(--panel),#1d1d32);
+border:1px solid var(--border);
+border-radius:22px;
+padding:18px;
+}
+
+/* CREATE */
+input{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:2px solid var(--border);
+background:#10101a;
+color:white;
+margin-bottom:14px;
+}
+
+.presets{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:8px;
+margin-bottom:14px;
+}
+.presets button{
+padding:10px;
+border-radius:12px;
+border:1px solid var(--border);
+background:#10101a;
+color:white;
+font-weight:800;
+cursor:pointer;
+}
+
+.primary{
+width:100%;
+padding:14px;
+border-radius:16px;
+border:none;
+font-weight:900;
+background:linear-gradient(135deg,var(--accent),#8b5cf6);
+color:white;
+cursor:pointer;
+}
+
+/* TOGGLE */
+.toggle{
+display:flex;
+gap:8px;
+margin-top:14px;
+}
+.toggle button{
+flex:1;
+padding:10px;
+border-radius:14px;
+border:1px solid var(--border);
+background:#10101a;
+color:white;
+font-weight:800;
+}
+.toggle button.active{
+background:linear-gradient(135deg,var(--accent),#8b5cf6);
+border:none;
+}
+
+/* TRENDING */
+.trending{
+margin-top:10px;
+}
+.trending li{
+list-style:none;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:10px 6px;
+border-bottom:1px solid var(--border);
+cursor:pointer;
+}
+.trending img{
+width:20px;
+height:20px;
+border-radius:50%;
+margin-right:10px;
+}
+.trending .left{
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+/* WIDGET */
+.widget{
+margin-top:18px;
+background:var(--panel2);
+border-radius:24px;
+padding:22px;
+text-align:center;
+border:2px solid var(--border);
+}
+.widget.positive{box-shadow:0 0 22px rgba(34,197,94,.35);border-color:var(--green)}
+.widget.negative{box-shadow:0 0 22px rgba(239,68,68,.35);border-color:var(--red)}
+
+.coin{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+margin-bottom:6px;
+}
+.coin img{
+width:42px;
+height:42px;
+border-radius:50%;
+}
+.coin .name{
+font-size:1.5rem;
+font-weight:900;
+}
+.coin .symbol{
+font-size:.75rem;
+color:var(--muted);
+}
+
+.price{
+font-size:2.8rem;
+font-weight:900;
+margin:8px 0;
+}
+
+.change{
+font-size:1.2rem;
+font-weight:900;
+}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:16px;
+}
+.stat{
+background:#0d0d16;
+border-radius:16px;
+padding:14px;
+text-align:center;
+}
+.stat span{
+display:block;
+font-size:.65rem;
+color:var(--muted);
+margin-bottom:4px;
+}
+.stat strong{
+font-size:1rem;
+}
+
+.footer{
+margin-top:14px;
+font-size:.65rem;
+color:var(--muted);
+}
+
+/* SHARE */
+.share-buttons{
+display:flex;
+gap:10px;
+margin-top:14px;
+}
+.share-buttons button{
+flex:1;
+padding:14px;
+border-radius:16px;
+border:none;
+font-weight:900;
+background:linear-gradient(135deg,var(--accent),#8b5cf6);
+color:white;
+cursor:pointer;
+}
+.copied{
+background:linear-gradient(135deg,var(--green),#16a34a)!important;
+}
+
+/* FAQ */
+.footer-links{
+position:fixed;
+left:14px;
+bottom:14px;
+display:flex;
+gap:8px;
+opacity:0;
+transition:.3s;
+}
+.footer-links.show{opacity:1}
+.badge{
+padding:8px 12px;
+border-radius:12px;
+border:1px solid var(--border);
+background:#10101a;
+font-size:.7rem;
+font-weight:700;
+cursor:pointer;
+}
+
+#faq{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+align-items:center;
+justify-content:center;
+z-index:20;
+}
+#faq .panel{max-width:420px}
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="nav">
+<a href="index.html">HOME</a>
+<span>CRYPTO</span>
+</div>
+
+<div class="container">
+<h1>BlockState</h1>
+<div class="subtitle">CRYPTO</div>
+
+<div class="section">CREATE</div>
+<div class="panel">
+<input id="search" placeholder="Search crypto (Top 250)">
+<div class="presets" id="presets"></div>
+<button class="primary" onclick="App.generate()">Create BlockState</button>
+
+<div class="toggle">
+<button id="gBtn" class="active" onclick="App.setMode('gainers')">GAINERS</button>
+<button id="lBtn" onclick="App.setMode('losers')">LOSERS</button>
+</div>
+
+<ul class="trending" id="trendList"></ul>
+</div>
+
+<div class="section">CAPTURE</div>
+<div id="output"></div>
+
+<div class="section">SHARE</div>
+<div class="panel">
+<div class="share-buttons">
+<button onclick="App.saveImage()">Save BlockState</button>
+<button id="copyBtn" onclick="App.copyCaption()">Copy Caption</button>
+</div>
+</div>
+</div>
+
+<div class="footer-links" id="footer">
+<div class="badge">v1.0</div>
+<div class="badge" onclick="openFAQ()">FAQ</div>
+</div>
+
+<div id="faq">
+<div class="panel">
+<h3>Crypto BlockState FAQ</h3>
+<p>Crypto BlockState captures a real-time snapshot of a cryptocurrency’s price, change, and market stats.</p>
+<p>Data provided using CoinGecko. BlockState does not provide financial advice.</p>
+<button class="badge" onclick="closeFAQ()">Close</button>
+</div>
+</div>
+
+<script>
+/* PARTICLES */
+const c=document.getElementById("particles"),x=c.getContext("2d");
+let w,h,p=[];
+function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
+addEventListener("resize",resize);resize();
+for(let i=0;i<70;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});
+(function t(){
+x.clearRect(0,0,w,h);
+x.fillStyle="rgba(108,124,255,.35)";
+p.forEach(o=>{o.x+=o.vx;o.y+=o.vy;if(o.x<0)o.x=w;if(o.y<0)o.y=h;if(o.x>w)o.x=0;if(o.y>h)o.y=0;x.fillRect(o.x,o.y,1,1)});
+requestAnimationFrame(t);
+})();
+
+/* APP */
+const App={
+coins:[],current:null,mode:'gainers',
+async load(){
+const r=await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false");
+this.coins=await r.json();
+this.renderPresets();
+this.renderTrending();
+},
+renderPresets(){
+const ids=["bitcoin","ethereum","binancecoin","ripple","dogecoin"];
+const p=document.getElementById("presets");
+ids.forEach(id=>{
+const c=this.coins.find(x=>x.id===id);
+if(!c)return;
+const b=document.createElement("button");
+b.textContent=c.symbol.toUpperCase();
+b.onclick=()=>this.show(c);
+p.appendChild(b);
+});
+},
+setMode(m){
+this.mode=m;
+gBtn.classList.toggle("active",m==="gainers");
+lBtn.classList.toggle("active",m==="losers");
+this.renderTrending();
+},
+renderTrending(){
+const list=document.getElementById("trendList");
+list.innerHTML="";
+[...this.coins]
+.sort((a,b)=>this.mode==="gainers"?b.price_change_percentage_24h-a.price_change_percentage_24h:a.price_change_percentage_24h-b.price_change_percentage_24h)
+.slice(0,10)
+.forEach(c=>{
+const li=document.createElement("li");
+li.innerHTML=`
+<div class="left">
+<img src="${c.image}">
+${c.name}
+</div>
+<span style="color:${c.price_change_percentage_24h>=0?'var(--green)':'var(--red)'}">
+${c.price_change_percentage_24h.toFixed(2)}%
+</span>`;
+li.onclick=()=>this.show(c);
+list.appendChild(li);
+});
+},
+fmtPrice(v){
+if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+if(v>=0.01)return v.toFixed(4);
+return v.toFixed(8);
+},
+fmtCap(v){
+if(v>=1e12)return( v/1e12).toFixed(2)+" T";
+if(v>=1e9)return( v/1e9).toFixed(2)+" B";
+return( v/1e6).toFixed(2)+" M";
+},
+show(c){
+this.current=c;
+const up=c.price_change_percentage_24h>=0;
+document.getElementById("output").innerHTML=`
+<div class="widget ${up?'positive':'negative'}" id="widget">
+<div class="coin">
+<img src="${c.image}">
+<div>
+<div class="name">${c.name.length>18?c.symbol.toUpperCase():c.name}</div>
+<div class="symbol">${c.symbol.toUpperCase()}</div>
+</div>
+</div>
+<div class="price">$${this.fmtPrice(c.current_price)}</div>
+<div class="change" style="color:${up?'var(--green)':'var(--red)'}">
+${up?'▲':'▼'} 24 hours ${c.price_change_percentage_24h.toFixed(2)}% ($${this.fmtPrice(c.price_change_24h)})
+</div>
+<div class="stats">
+<div class="stat"><span>24H HIGH</span><strong>$${this.fmtPrice(c.high_24h)}</strong></div>
+<div class="stat"><span>24H LOW</span><strong>$${this.fmtPrice(c.low_24h)}</strong></div>
+<div class="stat"><span>MARKET CAP</span><strong>${this.fmtCap(c.market_cap)}</strong></div>
+<div class="stat"><span>MC RANK</span><strong>#${c.market_cap_rank}</strong></div>
+</div>
+<div class="footer">
+Captured • ${new Date().toUTCString()}<br>
+Data provided using CoinGecko • BlockState.Live
+</div>
+</div>`;
+this.makeCaption();
+setTimeout(()=>document.getElementById("widget").scrollIntoView({behavior:"smooth"}),100);
+},
+generate(){
+const v=document.getElementById("search").value.toLowerCase();
+const c=this.coins.find(x=>v.includes(x.symbol)||v.includes(x.name.toLowerCase()));
+if(c)this.show(c);
+},
+makeCaption(){
+const c=this.current;
+if(!c)return;
+const up=c.price_change_percentage_24h>=0;
+this.caption=`${c.name} moved ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% over the past 24 hours ${up?'▲':'▼'} trading at $${this.fmtPrice(c.current_price)} with a market cap of ${this.fmtCap(c.market_cap)} #${c.symbol.toUpperCase()} #BlockState`;
+},
+copyCaption(){
+navigator.clipboard.writeText(this.caption);
+const b=document.getElementById("copyBtn");
+b.classList.add("copied");
+b.textContent="Copied ✓";
+setTimeout(()=>{b.classList.remove("copied");b.textContent="Copy Caption"},1200);
+},
+saveImage(){
+html2canvas(document.getElementById("widget"),{backgroundColor:null,scale:2,useCORS:true}).then(c=>{
+const a=document.createElement("a");
+a.download="blockstate.png";
+a.href=c.toDataURL();
+a.click();
+});
+}
+};
+
+document.addEventListener("DOMContentLoaded",()=>App.load());
+
+/* FOOTER */
+addEventListener("scroll",()=>{
+(innerHeight+scrollY)>=document.body.offsetHeight-40
+?footer.classList.add("show")
+:footer.classList.remove("show");
+});
+function openFAQ(){faq.style.display="flex"}
+function closeFAQ(){faq.style.display="none"}
+</script>
+
+</body>
+</html>
