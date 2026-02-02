@@ -1,0 +1,43 @@
+name: Update Crypto Data
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # every 5 minutes
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Fetch CoinGecko data
+        run: |
+          mkdir -p data
+          node -e "
+          const fs = require('fs');
+          const fetch = require('node-fetch');
+
+          const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false';
+          fetch(url).then(r => r.json()).then(data => {
+            const payload = {
+              updated_at: new Date().toISOString(),
+              source: 'CoinGecko',
+              data
+            };
+            fs.writeFileSync('data/crypto.json', JSON.stringify(payload, null, 2));
+          });
+          "
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add data/crypto.json
+          git commit -m "Update crypto data" || exit 0
+          git push
