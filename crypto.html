@@ -189,7 +189,7 @@ height:22px;
 border-radius:50%;
 }
 
-/* WIDGET (ORIGINAL SIZE) */
+/* WIDGET */
 .widget{
 width:420px;
 height:520px;
@@ -219,17 +219,12 @@ height:56px;
 border-radius:50%;
 }
 .asset-name{
-font-size:2.2rem;
+font-size:2.4rem;
 font-weight:900;
 line-height:1.1;
 white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
-}
-.asset-name span{
-font-size:1rem;
-color:var(--muted);
-margin-left:6px;
 }
 
 /* PRICE */
@@ -238,12 +233,6 @@ font-weight:900;
 line-height:1;
 white-space:nowrap;
 font-size:2.6rem;
-}
-.price small{
-font-size:1.2rem;
-vertical-align:super;
-margin:0 2px;
-color:var(--muted);
 }
 
 .change{
@@ -415,58 +404,22 @@ z-index:20;
 <div class="panel">
 <h3>Crypto BlockState FAQ</h3>
 <p>A Crypto BlockState is a visual snapshot of live cryptocurrency market data.</p>
-<p>Ultra-small prices collapse leading zeros while preserving precision.</p>
-<p>All data is provided by CoinGecko. This site does not provide financial advice.</p>
+<p>All data is sourced from CoinGecko. This site does not provide financial advice.</p>
+<p>You may freely save and share BlockStates on social media.</p>
 <button class="primary" onclick="FAQ.close()">Close</button>
 </div>
 </div>
 
 <script>
-let last=0;
-addEventListener("scroll",()=>{
-const n=document.getElementById("nav");
-const y=scrollY;
-n.classList.toggle("hide",y>last && y>50);
-last=y;
-});
-
-/* PARTICLES */
-const c=document.getElementById("particles"),x=c.getContext("2d");
-let w,h,p=[];
-function r(){w=c.width=innerWidth;h=c.height=innerHeight}
-addEventListener("resize",r);r();
-for(let i=0;i<120;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.4});
-(function t(){
-x.clearRect(0,0,w,h);
-x.fillStyle="rgba(108,124,255,.4)";
-p.forEach(o=>{
-o.x+=o.vx;o.y+=o.vy;
-if(o.x<0)o.x=w;if(o.x>w)o.x=0;
-if(o.y<0)o.y=h;if(o.y>h)o.y=0;
-x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
-});
-requestAnimationFrame(t);
-})();
-
-/* FAQ */
 const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
 
-/* APP */
 const App={
 coins:[],current:null,
 
 fmt(v){
-if(v>=0.01)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:6});
-const s=v.toFixed(10);
-const [,dec]=s.split(".");
-let z=0;
-for(const c of dec){if(c==="0")z++;else break;}
-return `<small>${z}</small>${dec.slice(z,z+4)}`;
-},
-
-priceHTML(v){
-if(v>=0.01)return `$${this.fmt(v)}`;
-return `$0·${this.fmt(v)}`;
+if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+if(v>=.01)return v.toFixed(4);
+return v.toFixed(8);
 },
 
 cap(v){
@@ -478,10 +431,9 @@ return (v/1e6).toFixed(2)+" M";
 makeCaption(){
 const c=this.current;
 const up=c.price_change_percentage_24h>=0;
-const arrow=up?'▲':'▼';
 caption.textContent=
-`${c.name} (${c.symbol.toUpperCase()}) is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
-Price: $${c.current_price} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
+`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
+Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
 },
 
 async load(){
@@ -547,24 +499,24 @@ if(c)this.show(c,true);
 show(c,scroll){
 this.current=c;
 const up=c.price_change_percentage_24h>=0;
-const arrow=up?'▲':'▼';
+const displayName=c.name.length>14?c.symbol.toUpperCase():c.symbol.toUpperCase();
 
 output.innerHTML=`
 <div class="widget ${up?'up':'down'}" id="widget">
 <div class="asset">
 <img src="${c.image}">
-<div class="asset-name">${c.name}<span>${c.symbol.toUpperCase()}</span></div>
+<div class="asset-name">${displayName}</div>
 </div>
 
-<div class="price">${this.priceHTML(c.current_price)}</div>
+<div class="price">$${this.fmt(c.current_price)}</div>
 
 <div class="change" style="color:${up?'var(--up)':'var(--down)'}">
-${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
+${up?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
 </div>
 
 <div class="stats">
-<div class="stat"><span>24H HIGH</span><strong>${this.priceHTML(c.high_24h)}</strong></div>
-<div class="stat"><span>24H LOW</span><strong>${this.priceHTML(c.low_24h)}</strong></div>
+<div class="stat"><span>24H HIGH</span><strong>$${this.fmt(c.high_24h)}</strong></div>
+<div class="stat"><span>24H LOW</span><strong>$${this.fmt(c.low_24h)}</strong></div>
 <div class="stat"><span>MARKET CAP</span><strong>${this.cap(c.market_cap)}</strong></div>
 <div class="stat"><span>MC RANK</span><strong>#${c.market_cap_rank}</strong></div>
 </div>
