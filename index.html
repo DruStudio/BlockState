@@ -1,205 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>BlockState</title>
 
 <style>
-:root{
---bg:#07070c;
---panel:#141425;
---border:#2a2a3a;
---text:#ffffff;
---muted:#9aa0b4;
---accent:#6c7cff;
-}
-
-*{box-sizing:border-box}
 html,body{
 margin:0;
 padding:0;
-background:var(--bg);
-color:var(--text);
+background:#07070c;
+color:#fff;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-overflow:hidden;
+overflow-x:hidden;
 }
 
-/* PARTICLES */
-canvas{
-position:fixed;
-inset:0;
-z-index:0;
-pointer-events:none;
-}
+canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* NAV */
-.nav{
-position:fixed;
-top:0;
-width:100%;
-z-index:5;
-display:flex;
-justify-content:center;
-gap:28px;
-padding:6px 0;
-letter-spacing:.35em;
-font-size:.75rem;
-color:var(--muted);
-background:linear-gradient(to bottom, rgba(7,7,12,.95), rgba(7,7,12,0));
-}
-
-/* TOP LEFT */
-.top-left{
-position:fixed;
-top:6px;
-left:14px;
-z-index:6;
-display:flex;
-gap:12px;
-font-size:.7rem;
-letter-spacing:.25em;
-color:var(--muted);
-}
-.top-left span{cursor:pointer}
-
-/* PAGE */
 .container{
 position:relative;
 z-index:2;
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-gap:8px;
-padding-top:48px; /* tightened */
+max-width:420px;
+margin:auto;
+padding:64px 16px 120px;
 }
 
-h1{
-font-size:3.1rem;
-font-weight:900;
-color:var(--accent);
-margin:0;
-}
-
-.bio{
+.title{
 text-align:center;
-max-width:520px;
-font-size:.95rem;
-color:var(--muted);
-}
-
-/* BUTTONS */
-.buttons{
-display:flex;
-gap:14px;
-margin-top:8px;
-flex-wrap:wrap;
-justify-content:center;
-}
-
-.btn{
-padding:14px 26px;
-border-radius:16px;
+font-size:2.8rem;
 font-weight:900;
-border:1px solid var(--border);
-background:#10101a;
-color:white;
-cursor:pointer;
+color:#6c7cff;
+margin-bottom:6px;
 }
 
-.btn.crypto{
-border:1px solid var(--accent);
-box-shadow:0 0 12px rgba(108,124,255,.35);
+.subtitle{
+text-align:center;
+letter-spacing:.35em;
+font-size:.75rem;
+color:#9aa0b4;
+margin-bottom:28px;
 }
 
-.uc{opacity:.45;cursor:not-allowed}
-
-/* FAQ */
-#faq{
-position:fixed;
-inset:0;
-display:none;
-justify-content:center;
-align-items:center;
-background:rgba(0,0,0,.6);
-z-index:10;
+.nav{
+display:grid;
+gap:14px;
 }
-#faq .panel{
-background:var(--panel);
-border:1px solid var(--border);
-border-radius:18px;
+
+.nav a{
+text-decoration:none;
+}
+
+.panel{
+background:linear-gradient(135deg,#141425,#1d1d32);
+border:1px solid #2a2a3a;
+border-radius:22px;
 padding:22px;
-max-width:460px;
+text-align:center;
+font-weight:900;
+font-size:1.2rem;
+color:white;
+}
+
+.footer{
+text-align:center;
+font-size:.65rem;
+color:#9aa0b4;
+margin-top:28px;
+}
+
+@media(max-width:480px){
+.title{font-size:2.3rem}
 }
 </style>
 </head>
 
 <body>
-
 <canvas id="particles"></canvas>
 
-<div class="top-left">
-<span onclick="openFAQ()">FAQ</span>
-<span>v6.9.6</span>
-</div>
+<div class="container">
+<div class="title">BlockState</div>
+<div class="subtitle">CREATE · CAPTURE · SHARE</div>
 
 <div class="nav">
-<span>HOME</span>
-<a href="crypto.html" style="color:inherit;text-decoration:none">CRYPTO</a>
+<a href="crypto.html"><div class="panel">Crypto</div></a>
+<a href="#"><div class="panel">Stocks (Soon)</div></a>
+<a href="#"><div class="panel">Indexes (Soon)</div></a>
 </div>
 
-<div class="container">
-<h1>BlockState</h1>
-<div class="bio">A visual snapshot of the moment — built to be shared.</div>
-
-<div class="buttons">
-<a href="crypto.html" class="btn crypto">Crypto</a>
-<div class="btn uc">Stocks</div>
-<div class="btn uc">Weather</div>
-<div class="btn uc">Economy</div>
-</div>
-</div>
-
-<div id="faq">
-<div class="panel">
-<h3>BlockState FAQ</h3>
-<p>BlockState creates clean, shareable visual snapshots of live data.</p>
-<p>No financial advice is provided.</p>
-<button class="btn" onclick="closeFAQ()">Close</button>
+<div class="footer">
+© 2026 BlockState.Live
 </div>
 </div>
 
 <script>
 const c=document.getElementById("particles"),x=c.getContext("2d");
-let w,h;
-function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
-resize();addEventListener("resize",resize);
-
-if(!window.__particles){
-window.__particles=[];
-for(let i=0;i<70;i++)window.__particles.push({
-x:Math.random()*w,y:Math.random()*h,
-vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25
-});
-}
-const p=window.__particles;
-(function loop(){
+let w,h,p=[];
+function r(){w=c.width=innerWidth;h=c.height=innerHeight}
+addEventListener("resize",r);r();
+for(let i=0;i<70;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});
+(function t(){
 x.clearRect(0,0,w,h);
 x.fillStyle="rgba(108,124,255,.35)";
 p.forEach(o=>{
 o.x+=o.vx;o.y+=o.vy;
 if(o.x<0)o.x=w;if(o.y<0)o.y=h;
 if(o.x>w)o.x=0;if(o.y>h)o.y=0;
-x.fillRect(o.x,o.y,1,1);
+x.fillRect(o.x,o.y,1,1)
 });
-requestAnimationFrame(loop);
+requestAnimationFrame(t);
 })();
-
-function openFAQ(){faq.style.display="flex"}
-function closeFAQ(){faq.style.display="none"}
 </script>
-
 </body>
 </html>
