@@ -72,8 +72,8 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-gap:10px;
-padding:0 16px;
+gap:8px;
+padding-top:48px; /* tightened */
 }
 
 h1{
@@ -114,10 +114,7 @@ border:1px solid var(--accent);
 box-shadow:0 0 12px rgba(108,124,255,.35);
 }
 
-.uc{
-opacity:.45;
-cursor:not-allowed;
-}
+.uc{opacity:.45;cursor:not-allowed}
 
 /* FAQ */
 #faq{
@@ -145,7 +142,7 @@ max-width:460px;
 
 <div class="top-left">
 <span onclick="openFAQ()">FAQ</span>
-<span>v6.9.5</span>
+<span>v6.9.6</span>
 </div>
 
 <div class="nav">
@@ -175,7 +172,7 @@ max-width:460px;
 </div>
 
 <script>
-const c=document.querySelector("canvas"),x=c.getContext("2d");
+const c=document.getElementById("particles"),x=c.getContext("2d");
 let w,h;
 function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
 resize();addEventListener("resize",resize);
