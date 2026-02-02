@@ -338,27 +338,6 @@ z-index:20;
 .modal .panel{max-width:560px;text-align:left}
 .modal h3{margin-bottom:12px}
 .modal p{font-size:.85rem;color:var(--muted);line-height:1.45}
-
-/* =========================
-   MOBILE FIX (ADD ONLY)
-========================= */
-@media (max-width: 900px){
-.container{
-padding:96px 14px 180px;
-}
-.main{
-grid-template-columns:1fr;
-gap:28px;
-}
-.presets{
-grid-template-columns:repeat(3,1fr);
-}
-.widget{
-transform:scale(.88);
-transform-origin:top center;
-margin-bottom:-60px;
-}
-}
 </style>
 </head>
 
@@ -429,73 +408,33 @@ margin-bottom:-60px;
 </div>
 
 <script>
-/* NAV */
-let last=0;
-addEventListener("scroll",()=>{
-const n=document.getElementById("nav");
-const y=scrollY;
-n.classList.toggle("hide",y>last && y>50);
-last=y;
-});
-
-/* PARTICLES */
-const c=document.getElementById("particles"),x=c.getContext("2d");
-let w,h,p=[];
-function r(){w=c.width=innerWidth;h=c.height=innerHeight}
-addEventListener("resize",r);r();
-for(let i=0;i<120;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.4});
-(function t(){
-x.clearRect(0,0,w,h);
-x.fillStyle="rgba(108,124,255,.4)";
-p.forEach(o=>{
-o.x+=o.vx;o.y+=o.vy;
-if(o.x<0)o.x=w;if(o.x>w)o.x=0;
-if(o.y<0)o.y=h;if(o.y>h)o.y=0;
-x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
-});
-requestAnimationFrame(t);
-})();
-
-/* FAQ */
 const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
 
 const App={
 coins:[],current:null,updatedAt:null,
 
 fmt(v){
-  if(v >= 1){
-    return v.toLocaleString(undefined,{
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    });
-  }
+if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+if(v>=0.01)return v.toFixed(4);
+const dec=v.toFixed(12).split(".")[1];
+let z=0;for(const c of dec){if(c==="0")z++;else break;}
+return `0.<small>${z}</small>${dec.slice(z,z+4)}`;
+},
 
-  if(v >= 0.01){
-    return v.toFixed(4);
-  }
-
-  // ultra-small prices
-  const s = v.toFixed(12);
-  const dec = s.split(".")[1];
-  let z = 0;
-
-  for(const c of dec){
-    if(c === "0") z++;
-    else break;
-  }
-
-  return `0.<small>${z}</small>${dec.slice(z, z + 4)}`;
-}
+cap(v){
+if(v>=1e12)return (v/1e12).toFixed(2)+" T";
+if(v>=1e9)return (v/1e9).toFixed(2)+" B";
+return (v/1e6).toFixed(2)+" M";
+},
 
 makeCaption(){
-  const c = this.current;
-  const up = c.price_change_percentage_24h >= 0;
-  const arrow = up ? "▲" : "▼";
-
-  caption.innerHTML =
-`${c.symbol.toUpperCase()} is ${up ? 'up' : 'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
+const c=this.current;
+const up=c.price_change_percentage_24h>=0;
+const arrow=up?"▲":"▼";
+caption.innerHTML=
+`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
 Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
-}
+},
 
 async load(){
 const r=await fetch("data/crypto.json",{cache:"no-store"});
@@ -617,28 +556,7 @@ copyBtn.textContent="Copy Caption";
 }
 };
 
-document.addEventListener("DOMContentLoaded",()=>{
-App.load();
-
-/* SILENT REFRESH ON 5-MIN BOUNDARIES */
-(function schedule(){
-const now=new Date();
-const ms=(5-(now.getMinutes()%5))*60000-now.getSeconds()*1000-now.getMilliseconds();
-setTimeout(async()=>{
-try{
-const r=await fetch("data/crypto.json",{cache:"no-store"});
-const j=await r.json();
-App.coins=j.data;
-App.updatedAt=j.updated_at;
-if(App.current){
-const u=App.coins.find(x=>x.id===App.current.id);
-if(u)App.show(u,false);
-}
-}catch(e){console.warn(e)}
-schedule();
-},ms);
-})();
-});
+document.addEventListener("DOMContentLoaded",()=>App.load());
 </script>
 
 </body>
