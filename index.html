@@ -41,14 +41,34 @@ width:100%;
 z-index:5;
 display:flex;
 justify-content:center;
-gap:32px;
-padding:10px 0;
+gap:28px;
+padding:8px 0;
 letter-spacing:.35em;
 font-size:.75rem;
 color:var(--muted);
-background:linear-gradient(to bottom, rgba(7,7,12,.9), rgba(7,7,12,0));
+background:linear-gradient(to bottom, rgba(7,7,12,.95), rgba(7,7,12,0));
 }
-.nav a{color:inherit;text-decoration:none}
+.nav a,.nav span{
+color:inherit;
+text-decoration:none;
+cursor:pointer;
+}
+
+/* TOP LEFT */
+.top-left{
+position:fixed;
+top:8px;
+left:14px;
+z-index:6;
+display:flex;
+gap:10px;
+font-size:.7rem;
+letter-spacing:.2em;
+color:var(--muted);
+}
+.top-left span{
+cursor:pointer;
+}
 
 /* PAGE */
 .container{
@@ -59,12 +79,12 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-gap:18px;
+gap:14px;
 padding:0 16px;
 }
 
 h1{
-font-size:3.4rem;
+font-size:3.2rem;
 font-weight:900;
 color:var(--accent);
 margin:0;
@@ -81,7 +101,7 @@ color:var(--muted);
 .buttons{
 display:flex;
 gap:14px;
-margin-top:18px;
+margin-top:10px;
 flex-wrap:wrap;
 justify-content:center;
 }
@@ -97,38 +117,16 @@ cursor:pointer;
 }
 
 .btn.crypto{
-border-color:var(--accent);
-box-shadow:0 0 14px rgba(108,124,255,.35);
+border:1px solid var(--accent);
+box-shadow:0 0 12px rgba(108,124,255,.35);
 }
 
-/* UNDER CONSTRUCTION */
 .uc{
 opacity:.45;
 cursor:not-allowed;
 }
 
-/* FOOTER */
-.footer{
-position:fixed;
-bottom:14px;
-left:14px;
-display:flex;
-gap:10px;
-opacity:0;
-transition:.3s;
-}
-.footer.show{opacity:1}
-
-.badge{
-padding:8px 12px;
-border-radius:12px;
-font-size:.7rem;
-font-weight:800;
-border:1px solid var(--border);
-background:#10101a;
-cursor:pointer;
-}
-
+/* FAQ */
 #faq{
 position:fixed;
 inset:0;
@@ -152,6 +150,11 @@ max-width:460px;
 
 <canvas id="particles"></canvas>
 
+<div class="top-left">
+<span onclick="openFAQ()">FAQ</span>
+<span>v6.9.4</span>
+</div>
+
 <div class="nav">
 <span>HOME</span>
 <a href="crypto.html">CRYPTO</a>
@@ -171,23 +174,17 @@ A visual snapshot of the moment — built to be shared.
 </div>
 </div>
 
-<div class="footer" id="footer">
-<div class="badge">v6.9.2</div>
-<div class="badge" onclick="openFAQ()">FAQ</div>
-</div>
-
 <div id="faq">
 <div class="panel">
 <h3>BlockState FAQ</h3>
 <p>
 BlockState creates clean, shareable visual snapshots of live data.
-Each BlockState captures a moment in time for posting, archiving,
-or comparing later.
+Each BlockState captures a moment in time.
 </p>
 <p>
-BlockState does not provide financial advice.
+BlockState does not provide financial or investment advice.
 </p>
-<button class="badge" onclick="closeFAQ()">Close</button>
+<button class="btn" onclick="closeFAQ()">Close</button>
 </div>
 </div>
 
@@ -217,13 +214,6 @@ x.fillRect(o.x,o.y,1,1);
 });
 requestAnimationFrame(loop);
 })();
-
-/* FOOTER VISIBILITY */
-addEventListener("scroll",()=>{
-(window.innerHeight+scrollY)>=document.body.offsetHeight-40
-?footer.classList.add("show")
-:footer.classList.remove("show");
-});
 
 function openFAQ(){faq.style.display="flex"}
 function closeFAQ(){faq.style.display="none"}
