@@ -324,7 +324,7 @@ font-size:.7rem;
 letter-spacing:.25em;
 color:var(--muted);
 }
-.faq a{color:var(--muted);text-decoration:none;cursor:pointer}
+.faq a{color:var(--muted);cursor:pointer}
 
 .modal{
 position:fixed;
@@ -337,11 +337,7 @@ z-index:20;
 }
 .modal .panel{max-width:560px;text-align:left}
 .modal h3{margin-bottom:12px}
-.modal p{font-size:.85rem;color:var(--muted);margin-bottom:12px;line-height:1.45}
-
-@media(max-width:900px){
-.main{grid-template-columns:1fr}
-}
+.modal p{font-size:.85rem;color:var(--muted);line-height:1.45}
 </style>
 </head>
 
@@ -404,21 +400,15 @@ z-index:20;
 <div class="modal" id="faq">
 <div class="panel">
 <h3>Crypto BlockState FAQ</h3>
-<p><strong>What is a Crypto BlockState?</strong><br>
-A Crypto BlockState is a static visual snapshot of cryptocurrency market data captured at a specific moment in time.</p>
-<p><strong>Data source</strong><br>
-Pricing and market data are provided by CoinGecko.</p>
-<p><strong>No financial advice</strong><br>
-BlockState.Live does not provide financial, investment, trading, or legal advice.</p>
-<p><strong>Market risk</strong><br>
-Cryptocurrency prices are volatile.</p>
-<p><strong>Accuracy disclaimer</strong><br>
-Displayed values may be delayed or rounded.</p>
+<p>A Crypto BlockState is a visual snapshot of market data captured at a specific moment.</p>
+<p>Data is provided by CoinGecko and may be delayed or rounded.</p>
+<p>No financial or investment advice is provided.</p>
 <button class="primary" onclick="FAQ.close()">Close</button>
 </div>
 </div>
 
 <script>
+/* NAV */
 let last=0;
 addEventListener("scroll",()=>{
 const n=document.getElementById("nav");
@@ -454,11 +444,9 @@ coins:[],current:null,updatedAt:null,
 fmt(v){
 if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 if(v>=0.01)return v.toFixed(4);
-const s=v.toFixed(10);
-const dec=s.split(".")[1];
-let z=0;
-for(const c of dec){if(c==="0")z++;else break;}
-return `<small>${z}</small>${dec.slice(z,z+4)}`;
+const s=v.toFixed(10).split(".")[1];
+let z=0;for(const c of s){if(c==="0")z++;else break;}
+return `<small>${z}</small>${s.slice(z,z+4)}`;
 },
 
 cap(v){
@@ -477,7 +465,7 @@ Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #
 },
 
 async load(){
-const r=await fetch("data/crypto.json");
+const r=await fetch("data/crypto.json",{cache:"no-store"});
 const j=await r.json();
 this.coins=j.data;
 this.updatedAt=j.updated_at;
@@ -596,7 +584,28 @@ copyBtn.textContent="Copy Caption";
 }
 };
 
-document.addEventListener("DOMContentLoaded",()=>App.load());
+document.addEventListener("DOMContentLoaded",()=>{
+App.load();
+
+/* SILENT REFRESH ON 5-MIN BOUNDARIES */
+(function schedule(){
+const now=new Date();
+const ms=(5-(now.getMinutes()%5))*60000-now.getSeconds()*1000-now.getMilliseconds();
+setTimeout(async()=>{
+try{
+const r=await fetch("data/crypto.json",{cache:"no-store"});
+const j=await r.json();
+App.coins=j.data;
+App.updatedAt=j.updated_at;
+if(App.current){
+const u=App.coins.find(x=>x.id===App.current.id);
+if(u)App.show(u,false);
+}
+}catch(e){console.warn(e)}
+schedule();
+},ms);
+})();
+});
 </script>
 
 </body>
