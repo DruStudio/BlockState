@@ -275,6 +275,7 @@ line-height:1.4;
 white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
+text-align:center;
 }
 
 /* SHARE */
@@ -411,6 +412,33 @@ z-index:20;
 </div>
 
 <script>
+let last=0;
+addEventListener("scroll",()=>{
+const n=document.getElementById("nav");
+const y=scrollY;
+n.classList.toggle("hide",y>last && y>50);
+last=y;
+});
+
+/* PARTICLES */
+const c=document.getElementById("particles"),x=c.getContext("2d");
+let w,h,p=[];
+function r(){w=c.width=innerWidth;h=c.height=innerHeight}
+addEventListener("resize",r);r();
+for(let i=0;i<120;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.4});
+(function t(){
+x.clearRect(0,0,w,h);
+x.fillStyle="rgba(108,124,255,.4)";
+p.forEach(o=>{
+o.x+=o.vx;o.y+=o.vy;
+if(o.x<0)o.x=w;if(o.x>w)o.x=0;
+if(o.y<0)o.y=h;if(o.y>h)o.y=0;
+x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
+});
+requestAnimationFrame(t);
+})();
+
+/* FAQ */
 const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
 
 const App={
@@ -522,7 +550,7 @@ ${up?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
 </div>
 
 <div class="footer">
-Captured • ${new Date().toUTCString()} • CoinGecko
+Captured • ${new Date().toUTCString()} • Data provided by CoinGecko • BlockState.Live
 </div>
 </div>`;
 this.makeCaption();
