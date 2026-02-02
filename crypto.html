@@ -477,7 +477,7 @@ Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #
 },
 
 async load(){
-const r=await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1");
+const r=await fetch("data/crypto.json")
 this.coins=await r.json();
 this.populate();
 this.showGainers();
