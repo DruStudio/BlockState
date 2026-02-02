@@ -407,13 +407,13 @@ z-index:20;
 <p><strong>What is a Crypto BlockState?</strong><br>
 A Crypto BlockState is a static visual snapshot of cryptocurrency market data captured at a specific moment in time.</p>
 <p><strong>Data source</strong><br>
-Pricing and market data are provided by the CoinGecko API.</p>
+Pricing and market data are provided by CoinGecko.</p>
 <p><strong>No financial advice</strong><br>
 BlockState.Live does not provide financial, investment, trading, or legal advice.</p>
 <p><strong>Market risk</strong><br>
-Cryptocurrency prices are volatile. Past performance does not guarantee future results.</p>
+Cryptocurrency prices are volatile.</p>
 <p><strong>Accuracy disclaimer</strong><br>
-Displayed values may be delayed, rounded, or differ from other market data providers.</p>
+Displayed values may be delayed or rounded.</p>
 <button class="primary" onclick="FAQ.close()">Close</button>
 </div>
 </div>
@@ -449,7 +449,7 @@ requestAnimationFrame(t);
 const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
 
 const App={
-coins:[],current:null,
+coins:[],current:null,updatedAt:null,
 
 fmt(v){
 if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -477,8 +477,10 @@ Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #
 },
 
 async load(){
-const r=await fetch("data/crypto.json")
-this.coins=await r.json();
+const r=await fetch("data/crypto.json");
+const j=await r.json();
+this.coins=j.data;
+this.updatedAt=j.updated_at;
 this.populate();
 this.showGainers();
 this.show(this.coins[0]);
@@ -565,7 +567,7 @@ ${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ($${this.fmt(del
 </div>
 
 <div class="footer">
-<div>${new Date().toUTCString()}</div>
+<div>${this.updatedAt ? new Date(this.updatedAt).toUTCString() : new Date().toUTCString()}</div>
 <div>Data provided by CoinGecko • BlockState.Live</div>
 </div>
 </div>`;
