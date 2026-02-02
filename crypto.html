@@ -229,7 +229,7 @@ font-size:3rem;
 font-weight:900;
 white-space:nowrap;
 }
-.price .zeros{
+.price small{
 font-size:.9rem;
 vertical-align:super;
 margin-right:2px;
@@ -404,86 +404,28 @@ z-index:20;
 <div class="modal" id="faq">
 <div class="panel">
 <h3>Crypto BlockState FAQ</h3>
-<p><strong>What is a Crypto BlockState?</strong><br>
-A Crypto BlockState is a static visual snapshot of cryptocurrency market data captured at a specific moment in time.</p>
-<p><strong>Data source</strong><br>
-Market data is periodically fetched from CoinGecko and cached server-side.</p>
-<p><strong>No financial advice</strong><br>
-BlockState.Live does not provide financial, investment, trading, or legal advice.</p>
-<p><strong>Accuracy & timing</strong><br>
-Displayed values reflect the time of capture and may differ from real-time prices.</p>
-<p><strong>Risk disclosure</strong><br>
-Cryptocurrency markets are volatile and involve risk.</p>
+<p>Crypto BlockState is a static snapshot of cryptocurrency market data captured at a specific moment.</p>
+<p>Data is periodically updated and may not reflect real-time prices.</p>
+<p>All data is provided by CoinGecko. No financial advice is given.</p>
 <button class="primary" onclick="FAQ.close()">Close</button>
 </div>
 </div>
 
 <script>
-let last=0;
-addEventListener("scroll",()=>{
-const n=document.getElementById("nav");
-const y=scrollY;
-n.classList.toggle("hide",y>last && y>50);
-last=y;
-});
-
-/* PARTICLES */
-const c=document.getElementById("particles"),x=c.getContext("2d");
-let w,h,p=[];
-function r(){w=c.width=innerWidth;h=c.height=innerHeight}
-addEventListener("resize",r);r();
-for(let i=0;i<120;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.4});
-(function t(){
-x.clearRect(0,0,w,h);
-x.fillStyle="rgba(108,124,255,.4)";
-p.forEach(o=>{
-o.x+=o.vx;o.y+=o.vy;
-if(o.x<0)o.x=w;if(o.x>w)o.x=0;
-if(o.y<0)o.y=h;if(o.y>h)o.y=0;
-x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
-});
-requestAnimationFrame(t);
-})();
-
-/* FAQ */
 const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
 
 const App={
 coins:[],current:null,updatedAt:null,
 
-fmt(v){
-if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-if(v>=0.01)return v.toFixed(4);
-const s=v.toFixed(12);
-const dec=s.split(".")[1];
-let z=0;
-for(const c of dec){if(c==="0")z++;else break;}
-return `<span class="zeros">×10⁻${z}</span>${dec.slice(z,z+4)}`;
-},
-
-cap(v){
-if(v>=1e12)return (v/1e12).toFixed(2)+" T";
-if(v>=1e9)return (v/1e9).toFixed(2)+" B";
-return (v/1e6).toFixed(2)+" M";
-},
-
-makeCaption(){
-const c=this.current;
-const up=c.price_change_percentage_24h>=0;
-const arrow=up?"▲":"▼";
-caption.textContent=
-`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
-Price: $${c.current_price} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
-},
-
 async load(){
-const r=await fetch("/data/crypto.json");
-const json=await r.json();
-this.coins=json.data;
-this.updatedAt=json.updated_at;
-this.populate();
-this.showGainers();
-this.show(this.coins[0]);
+  const r = await fetch("data/crypto.json");
+  const json = await r.json();
+  this.coins = json.data;
+  this.updatedAt = json.updated_at;
+
+  this.populate();
+  this.showGainers();
+  this.show(this.coins[0]);
 },
 
 populate(){
@@ -493,14 +435,6 @@ this.coins.forEach(c=>{
 const o=document.createElement("option");
 o.value=`${c.symbol.toUpperCase()} — ${c.name}`;
 coins.appendChild(o);
-});
-["bitcoin","ethereum","binancecoin","ripple","dogecoin"].forEach(id=>{
-const c=this.coins.find(x=>x.id===id);
-if(!c)return;
-const b=document.createElement("button");
-b.textContent=c.symbol.toUpperCase();
-b.onclick=()=>this.show(c,true);
-presets.appendChild(b);
 });
 },
 
@@ -542,7 +476,6 @@ show(c,scroll){
 this.current=c;
 const up=c.price_change_percentage_24h>=0;
 const arrow=up?"▲":"▼";
-const delta=Math.abs(c.price_change_24h);
 
 output.innerHTML=`
 <div class="widget ${up?'up':'down'}" id="widget">
@@ -552,16 +485,16 @@ output.innerHTML=`
 <div class="asset-name">${c.symbol.toUpperCase()}</div>
 </div>
 
-<div class="price">$${this.fmt(c.current_price)}</div>
+<div class="price">$${c.current_price}</div>
 
 <div class="change" style="color:${up?'var(--up)':'var(--down)'}">
-${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ($${this.fmt(delta)})
+${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ($${Math.abs(c.price_change_24h).toFixed(4)})
 </div>
 
 <div class="stats">
-<div class="stat"><span>24H HIGH</span><strong>$${this.fmt(c.high_24h)}</strong></div>
-<div class="stat"><span>24H LOW</span><strong>$${this.fmt(c.low_24h)}</strong></div>
-<div class="stat"><span>MARKET CAP</span><strong>${this.cap(c.market_cap)}</strong></div>
+<div class="stat"><span>24H HIGH</span><strong>$${c.high_24h}</strong></div>
+<div class="stat"><span>24H LOW</span><strong>$${c.low_24h}</strong></div>
+<div class="stat"><span>MARKET CAP</span><strong>${c.market_cap}</strong></div>
 <div class="stat"><span>MC RANK</span><strong>#${c.market_cap_rank}</strong></div>
 </div>
 </div>
@@ -571,7 +504,6 @@ ${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ($${this.fmt(del
 <div>Data provided by CoinGecko • BlockState.Live</div>
 </div>
 </div>`;
-this.makeCaption();
 if(scroll)document.getElementById("widget").scrollIntoView({behavior:"smooth",block:"center"});
 },
 
