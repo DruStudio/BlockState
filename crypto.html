@@ -8,7 +8,6 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-/* same variables as before */
 :root{
 --bg:#07070c;--panel:#141425;--panel2:#0f0f1a;
 --border:#2a2a3a;--text:#fff;--muted:#9aa0b4;
@@ -17,45 +16,57 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 
-/* particles */
+/* PARTICLES */
 canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* nav + top-left */
+/* NAV + TOP LEFT */
 .nav{position:fixed;top:0;width:100%;display:flex;justify-content:center;gap:28px;padding:6px 0;letter-spacing:.35em;font-size:.75rem;color:var(--muted);z-index:5;background:linear-gradient(to bottom, rgba(7,7,12,.95), rgba(7,7,12,0))}
 .top-left{position:fixed;top:6px;left:14px;z-index:6;display:flex;gap:12px;font-size:.7rem;letter-spacing:.25em;color:var(--muted)}
 .top-left span{cursor:pointer}
 
-/* page */
+/* PAGE */
 .container{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:90px 16px 140px}
 h1{text-align:center;font-size:3rem;font-weight:900;color:var(--accent)}
 .subtitle{text-align:center;font-size:.75rem;letter-spacing:.4em;color:var(--muted);margin-bottom:24px}
 
-/* grid */
+/* GRID */
 .grid{display:grid;grid-template-columns:420px 1fr;gap:28px}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 
-/* section titles */
+/* SECTION TITLES */
 .section{text-align:center;font-size:.75rem;letter-spacing:.4em;color:var(--muted);margin-bottom:8px}
 
-/* panels */
+/* PANELS */
 .panel{background:linear-gradient(135deg,var(--panel),#1d1d32);border:1px solid var(--border);border-radius:22px;padding:18px}
 
-/* create */
+/* CREATE */
 input{width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);background:#10101a;color:white;margin-bottom:14px}
 .presets{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
 .presets button{padding:10px;border-radius:12px;border:1px solid var(--border);background:#10101a;color:white;font-weight:800;cursor:pointer}
 .primary{width:100%;padding:14px;border-radius:16px;border:none;font-weight:900;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:white}
 
-/* toggle + trending */
+/* TOGGLE + TRENDING */
 .toggle{display:flex;gap:8px;margin-top:14px}
 .toggle button{flex:1;padding:10px;border-radius:14px;border:1px solid var(--border);background:#10101a;color:white;font-weight:800}
 .toggle button.active{background:linear-gradient(135deg,var(--accent),#8b5cf6);border:none}
-.trending{margin-top:10px;text-align:center}
-.trending li{list-style:none;display:flex;justify-content:center;align-items:center;gap:12px;padding:10px;border-bottom:1px solid var(--border);cursor:pointer}
+.trending{margin-top:10px}
+.trending li{list-style:none;display:flex;justify-content:center;align-items:center;gap:10px;padding:10px;border-bottom:1px solid var(--border);cursor:pointer;text-align:center}
 .trending img{width:22px;height:22px;border-radius:50%}
 
-/* widget */
-.widget{aspect-ratio:1/1;max-width:520px;margin:0 auto;background:var(--panel2);border-radius:26px;padding:22px;text-align:center;border:2px solid var(--border)}
+/* CAPTURE */
+.capture-wrap{
+max-width:520px;
+margin:0 auto;
+}
+.widget{
+width:100%;
+aspect-ratio:1/1;
+background:var(--panel2);
+border-radius:26px;
+padding:22px;
+text-align:center;
+border:2px solid var(--border);
+}
 .widget.positive{border-color:var(--green)}
 .widget.negative{border-color:var(--red)}
 .coin{display:flex;justify-content:center;align-items:center;gap:10px}
@@ -63,18 +74,22 @@ input{width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);
 .price{font-size:3rem;font-weight:900}
 .change{font-size:1.25rem;font-weight:900}
 
-/* stats */
+/* STATS */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
 .stat{background:#0d0d16;border-radius:18px;padding:16px;text-align:center}
 .stat span{font-size:.65rem;color:var(--muted)}
 .stat strong{font-size:1.1rem}
 
-/* share */
+/* SHARE */
+.share-wrap{
+max-width:520px;
+margin:18px auto 0;
+}
 .share-buttons{display:flex;gap:10px}
 .share-buttons button{flex:1;padding:14px;border-radius:16px;border:none;font-weight:900;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:white}
 .caption{margin-top:10px;padding:14px;border-radius:14px;background:#10101a;border:1px solid var(--border);font-size:.85rem;color:var(--muted)}
 
-/* faq */
+/* FAQ */
 #faq{position:fixed;inset:0;display:none;justify-content:center;align-items:center;background:rgba(0,0,0,.6);z-index:10}
 </style>
 </head>
@@ -85,7 +100,7 @@ input{width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);
 
 <div class="top-left">
 <span onclick="openFAQ()">FAQ</span>
-<span>v6.9.5</span>
+<span>v6.9.6</span>
 </div>
 
 <div class="nav">
@@ -104,6 +119,7 @@ input{width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);
 <div class="panel">
 <input id="search" list="coinList" placeholder="Search crypto (Top 250)">
 <datalist id="coinList"></datalist>
+
 <div class="presets" id="presets"></div>
 <button class="primary" onclick="App.generate()">Create BlockState</button>
 
@@ -111,16 +127,17 @@ input{width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);
 <button id="gBtn" class="active" onclick="App.setMode('gainers')">GAINERS</button>
 <button id="lBtn" onclick="App.setMode('losers')">LOSERS</button>
 </div>
+
 <ul class="trending" id="trendList"></ul>
 </div>
 </div>
 
 <div>
 <div class="section">CAPTURE</div>
-<div id="output"></div>
+<div class="capture-wrap" id="output"></div>
 
 <div class="section" style="margin-top:18px">SHARE</div>
-<div class="panel">
+<div class="share-wrap panel">
 <div class="share-buttons">
 <button onclick="App.save()">Save BlockState</button>
 <button onclick="App.copy()">Copy Caption</button>
@@ -135,7 +152,7 @@ input{width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);
 <div id="faq">
 <div class="panel">
 <h3>Crypto FAQ</h3>
-<p>Live crypto data via CoinGecko.</p>
+<p>Live crypto snapshots powered by CoinGecko.</p>
 <p>No financial advice.</p>
 <button class="primary" onclick="closeFAQ()">Close</button>
 </div>
@@ -150,7 +167,7 @@ resize();addEventListener("resize",resize);
 if(!window.__particles){window.__particles=[...Array(70)].map(()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25}))}
 (function loop(){x.clearRect(0,0,w,h);x.fillStyle="rgba(108,124,255,.35)";window.__particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=w;if(p.y<0)p.y=h;if(p.x>w)p.x=0;if(p.y>h)p.y=0;x.fillRect(p.x,p.y,1,1)});requestAnimationFrame(loop)})();
 
-/* app */
+/* APP */
 const App={
 coins:[],current:null,mode:'gainers',
 async init(){
@@ -170,8 +187,10 @@ if(c){const b=document.createElement("button");b.textContent=c.symbol.toUpperCas
 setMode(m){this.mode=m;gBtn.classList.toggle("active",m==="gainers");lBtn.classList.toggle("active",m==="losers");this.renderTrending()},
 renderTrending(){
 trendList.innerHTML="";
-[...this.coins].sort((a,b)=>this.mode==="gainers"?b.price_change_percentage_24h-a.price_change_percentage_24h:a.price_change_percentage_24h-b.price_change_percentage_24h)
-.slice(0,10).forEach(c=>{
+[...this.coins]
+.sort((a,b)=>this.mode==="gainers"?b.price_change_percentage_24h-a.price_change_percentage_24h:a.price_change_percentage_24h-b.price_change_percentage_24h)
+.slice(0,10)
+.forEach(c=>{
 const li=document.createElement("li");
 li.innerHTML=`<img src="${c.image}">${c.name} <span style="color:${c.price_change_percentage_24h>=0?'var(--green)':'var(--red)'}">${c.price_change_percentage_24h.toFixed(2)}%</span>`;
 li.onclick=()=>this.show(c);
@@ -180,10 +199,17 @@ trendList.appendChild(li);
 },
 show(c){
 this.current=c;
-output.innerHTML=`<div class="widget ${c.price_change_percentage_24h>=0?'positive':'negative'}">
+output.innerHTML=`
+<div class="widget ${c.price_change_percentage_24h>=0?'positive':'negative'}">
 <div class="coin"><img src="${c.image}"><div><strong>${c.name}</strong><div>${c.symbol.toUpperCase()}</div></div></div>
 <div class="price">$${c.current_price}</div>
 <div class="change">${c.price_change_percentage_24h>=0?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%</div>
+<div class="stats">
+<div class="stat"><span>24H HIGH</span><strong>$${c.high_24h}</strong></div>
+<div class="stat"><span>24H LOW</span><strong>$${c.low_24h}</strong></div>
+<div class="stat"><span>MARKET CAP</span><strong>${c.market_cap}</strong></div>
+<div class="stat"><span>MC RANK</span><strong>#${c.market_cap_rank}</strong></div>
+</div>
 </div>`;
 caption.textContent=`${c.name} ${c.price_change_percentage_24h>=0?'gained':'lost'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% #${c.symbol.toUpperCase()} #BlockState`;
 },
