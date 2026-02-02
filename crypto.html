@@ -189,18 +189,17 @@ height:22px;
 border-radius:50%;
 }
 
-/* WIDGET */
+/* WIDGET — FIXED SIZE */
 .widget{
 width:420px;
 height:520px;
 border-radius:28px;
-padding:26px;
+padding:22px;
 background:linear-gradient(180deg,#12132b,#0a0b1a);
 border:1px solid var(--border);
 display:flex;
 flex-direction:column;
 justify-content:space-between;
-gap:10px;
 margin:0 auto;
 overflow:hidden;
 }
@@ -211,33 +210,33 @@ overflow:hidden;
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:4px;
+gap:6px;
 }
 .asset img{
-width:56px;
-height:56px;
+width:60px;
+height:60px;
 border-radius:50%;
 }
 .asset-name{
-font-size:2.4rem;
-font-weight:900;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-
-/* PRICE */
-.price{
 font-size:2.6rem;
 font-weight:900;
 white-space:nowrap;
 }
 
-/* CHANGE */
-.change{
-font-size:1rem;
+/* PRICE */
+.price{
+font-size:2.9rem;
 font-weight:900;
 white-space:nowrap;
+margin-top:4px;
+}
+
+/* CHANGE */
+.change{
+font-size:1.15rem;
+font-weight:900;
+white-space:nowrap;
+margin-top:2px;
 }
 
 /* STATS */
@@ -245,12 +244,12 @@ white-space:nowrap;
 margin-top:10px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:14px;
+gap:12px;
 }
 .stat{
 background:#0b0c1b;
 border-radius:16px;
-padding:14px 8px;
+padding:12px 8px;
 border:1px solid var(--border);
 }
 .stat span{
@@ -258,11 +257,11 @@ display:block;
 font-size:.6rem;
 letter-spacing:.18em;
 color:var(--muted);
-margin-bottom:6px;
+margin-bottom:4px;
 white-space:nowrap;
 }
 .stat strong{
-font-size:1.25rem;
+font-size:1.3rem;
 font-weight:900;
 white-space:nowrap;
 }
@@ -526,7 +525,7 @@ show(c,scroll){
 this.current=c;
 const up=c.price_change_percentage_24h>=0;
 const arrow=up?"▲":"▼";
-const delta=c.price_change_24h;
+const delta=Math.abs(c.price_change_24h);
 
 output.innerHTML=`
 <div class="widget ${up?'up':'down'}" id="widget">
@@ -539,7 +538,7 @@ output.innerHTML=`
 <div class="price">$${this.fmt(c.current_price)}</div>
 
 <div class="change" style="color:${up?'var(--up)':'var(--down)'}">
-Daily Change ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow} ($${this.fmt(Math.abs(delta))})
+${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow} ($${this.fmt(delta)})
 </div>
 
 <div class="stats">
