@@ -189,7 +189,7 @@ height:22px;
 border-radius:50%;
 }
 
-/* WIDGET — FIXED SIZE (DO NOT CHANGE) */
+/* WIDGET */
 .widget{
 width:420px;
 height:520px;
@@ -228,7 +228,6 @@ white-space:nowrap;
 font-size:3rem;
 font-weight:900;
 white-space:nowrap;
-margin-top:4px;
 }
 
 /* CHANGE */
@@ -236,7 +235,6 @@ margin-top:4px;
 font-size:1.2rem;
 font-weight:900;
 white-space:nowrap;
-margin-top:4px;
 }
 
 /* STATS */
@@ -331,9 +329,9 @@ align-items:center;
 justify-content:center;
 z-index:20;
 }
-.modal .panel{max-width:520px;text-align:left}
-.modal h3{margin-bottom:10px}
-.modal p{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+.modal .panel{max-width:560px;text-align:left}
+.modal h3{margin-bottom:12px}
+.modal p{font-size:.85rem;color:var(--muted);margin-bottom:12px;line-height:1.45}
 
 @media(max-width:900px){
 .main{grid-template-columns:1fr}
@@ -400,9 +398,18 @@ z-index:20;
 <div class="modal" id="faq">
 <div class="panel">
 <h3>Crypto BlockState FAQ</h3>
-<p>A Crypto BlockState is a visual snapshot of live cryptocurrency market data.</p>
-<p>All data is sourced from CoinGecko. This site does not provide financial advice.</p>
-<p>You may freely save and share BlockStates on social media.</p>
+<p><strong>What is a Crypto BlockState?</strong><br>
+A Crypto BlockState is a static visual snapshot of cryptocurrency market data captured at a specific moment in time.</p>
+<p><strong>Where does the data come from?</strong><br>
+Pricing, percentage change, and market data are sourced from the CoinGecko public API.</p>
+<p><strong>Is this financial advice?</strong><br>
+No. BlockState is provided for informational and visual purposes only and does not constitute financial, investment, trading, or legal advice.</p>
+<p><strong>Accuracy & timing</strong><br>
+Market data may be delayed, rounded, or differ from other sources. Values reflect the moment of capture, not real-time updates.</p>
+<p><strong>Risk disclosure</strong><br>
+Cryptocurrency markets are volatile. Past performance is not indicative of future results.</p>
+<p><strong>Usage rights</strong><br>
+You may freely save and share BlockStates. BlockState.Live provides no warranties regarding data accuracy or completeness.</p>
 <button class="primary" onclick="FAQ.close()">Close</button>
 </div>
 </div>
@@ -442,8 +449,12 @@ coins:[],current:null,
 
 fmt(v){
 if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-if(v>=.01)return v.toFixed(4);
-return v.toFixed(8);
+if(v>=0.01)return v.toFixed(4);
+const s=v.toFixed(10);
+const dec=s.split(".")[1];
+let z=0;
+for(const c of dec){if(c==="0")z++;else break;}
+return `0·(${z})${dec.slice(z,z+4)}`;
 },
 
 cap(v){
