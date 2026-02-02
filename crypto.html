@@ -199,7 +199,7 @@ background:linear-gradient(180deg,#12132b,#0a0b1a);
 border:1px solid var(--border);
 display:flex;
 flex-direction:column;
-justify-content:center;
+justify-content:space-between;
 gap:10px;
 margin:0 auto;
 overflow:hidden;
@@ -211,7 +211,7 @@ overflow:hidden;
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:2px;
+gap:4px;
 }
 .asset img{
 width:56px;
@@ -221,7 +221,6 @@ border-radius:50%;
 .asset-name{
 font-size:2.4rem;
 font-weight:900;
-line-height:1.1;
 white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
@@ -229,20 +228,21 @@ text-overflow:ellipsis;
 
 /* PRICE */
 .price{
-font-weight:900;
-line-height:1;
-white-space:nowrap;
 font-size:2.6rem;
-}
-
-.change{
-font-size:1.15rem;
 font-weight:900;
 white-space:nowrap;
 }
 
+/* CHANGE */
+.change{
+font-size:1rem;
+font-weight:900;
+white-space:nowrap;
+}
+
+/* STATS */
 .stats{
-margin-top:14px;
+margin-top:10px;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:14px;
@@ -267,14 +267,11 @@ font-weight:900;
 white-space:nowrap;
 }
 
+/* FOOTER */
 .footer{
-margin-top:14px;
 font-size:.6rem;
 color:var(--muted);
-line-height:1.4;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
+line-height:1.35;
 text-align:center;
 }
 
@@ -459,8 +456,9 @@ return (v/1e6).toFixed(2)+" M";
 makeCaption(){
 const c=this.current;
 const up=c.price_change_percentage_24h>=0;
+const arrow=up?"▲":"▼";
 caption.textContent=
-`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
+`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
 Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
 },
 
@@ -527,19 +525,21 @@ if(c)this.show(c,true);
 show(c,scroll){
 this.current=c;
 const up=c.price_change_percentage_24h>=0;
-const displayName=c.name.length>14?c.symbol.toUpperCase():c.symbol.toUpperCase();
+const arrow=up?"▲":"▼";
+const delta=c.price_change_24h;
 
 output.innerHTML=`
 <div class="widget ${up?'up':'down'}" id="widget">
+<div>
 <div class="asset">
 <img src="${c.image}">
-<div class="asset-name">${displayName}</div>
+<div class="asset-name">${c.symbol.toUpperCase()}</div>
 </div>
 
 <div class="price">$${this.fmt(c.current_price)}</div>
 
 <div class="change" style="color:${up?'var(--up)':'var(--down)'}">
-${up?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
+Daily Change ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow} ($${this.fmt(Math.abs(delta))})
 </div>
 
 <div class="stats">
@@ -548,9 +548,11 @@ ${up?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
 <div class="stat"><span>MARKET CAP</span><strong>${this.cap(c.market_cap)}</strong></div>
 <div class="stat"><span>MC RANK</span><strong>#${c.market_cap_rank}</strong></div>
 </div>
+</div>
 
 <div class="footer">
-Captured • ${new Date().toUTCString()} • Data provided by CoinGecko • BlockState.Live
+<div>${new Date().toUTCString()}</div>
+<div>Data provided by CoinGecko • BlockState.Live</div>
 </div>
 </div>`;
 this.makeCaption();
