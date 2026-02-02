@@ -118,13 +118,9 @@ color:var(--muted);
 }
 
 .icon.live{
-box-shadow:0 0 0 1px rgba(108,124,255,.35),0 0 14px rgba(108,124,255,.25);
-}
-
-@keyframes pulse{
-0%{box-shadow:0 0 6px rgba(108,124,255,.25)}
-50%{box-shadow:0 0 12px rgba(108,124,255,.4)}
-100%{box-shadow:0 0 6px rgba(108,124,255,.25)}
+box-shadow:
+0 0 0 1px rgba(108,124,255,.35),
+0 0 14px rgba(108,124,255,.25);
 }
 
 /* FAQ */
@@ -137,7 +133,28 @@ font-size:.7rem;
 letter-spacing:.25em;
 color:var(--muted);
 }
-.faq a{color:var(--muted);text-decoration:none}
+.faq a{color:var(--muted);text-decoration:none;cursor:pointer}
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:20;
+}
+.modal .panel{
+max-width:520px;
+text-align:left;
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:22px;
+padding:22px;
+}
+.modal h3{margin-bottom:10px}
+.modal p{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+.modal button{margin-top:8px}
 
 @media(max-width:520px){
 .icons{grid-template-columns:1fr;max-width:320px}
@@ -181,7 +198,17 @@ U.S. Debt
 </div>
 
 <div class="faq">
-<a href="#">FAQ</a>
+<a onclick="FAQ.open()">FAQ</a>
+</div>
+</div>
+
+<div class="modal" id="faq">
+<div class="panel">
+<h3>What is BlockState?</h3>
+<p>BlockState creates clean, visual snapshots of what’s happening right now — designed to be captured and shared.</p>
+<p>Each BlockState represents a moment in time, preserving live data exactly as it appeared.</p>
+<p>More data categories are coming soon.</p>
+<button onclick="FAQ.close()">Close</button>
 </div>
 </div>
 
@@ -211,6 +238,9 @@ x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
 });
 requestAnimationFrame(t);
 })();
+
+/* FAQ */
+const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
 </script>
 
 </body>
