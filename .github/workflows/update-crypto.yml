@@ -2,12 +2,13 @@ name: Update Crypto Data
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # every 5 minutes
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -22,18 +23,25 @@ jobs:
           mkdir -p data
           node -e "
           const fs = require('fs');
-          const fetch = require('node-fetch');
 
           const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false';
-          fetch(url).then(r => r.json()).then(data => {
-            const payload = {
-              updated_at: new Date().toISOString(),
-              source: 'CoinGecko',
-              data
-            };
-            fs.writeFileSync('data/crypto.json', JSON.stringify(payload, null, 2));
-          });
+
+          fetch(url)
+            .then(r => r.json())
+            .then(data => {
+              const payload = {
+                updated_at: new Date().toISOString(),
+                source: 'CoinGecko',
+                data
+              };
+              fs.writeFileSync('data/crypto.json', JSON.stringify(payload, null, 2));
+            })
+            .catch(err => {
+              console.error(err);
+              process.exit(1);
+            });
           "
+
       - name: Commit and push
         run: |
           git config user.name "github-actions"
