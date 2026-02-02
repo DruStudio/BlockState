@@ -189,37 +189,37 @@ height:22px;
 border-radius:50%;
 }
 
-/* WIDGET — LOCKED 1080x1080 */
+/* WIDGET (ORIGINAL SIZE) */
 .widget{
-width:1080px;
-height:1080px;
-border-radius:48px;
-padding:64px;
+width:420px;
+height:520px;
+border-radius:28px;
+padding:26px;
 background:linear-gradient(180deg,#12132b,#0a0b1a);
 border:1px solid var(--border);
 display:flex;
 flex-direction:column;
 justify-content:center;
-gap:28px;
+gap:10px;
 margin:0 auto;
 overflow:hidden;
 }
-.widget.up{box-shadow:0 0 28px rgba(34,197,94,.22)}
-.widget.down{box-shadow:0 0 28px rgba(239,68,68,.22)}
+.widget.up{box-shadow:0 0 16px rgba(34,197,94,.22)}
+.widget.down{box-shadow:0 0 16px rgba(239,68,68,.22)}
 
 .asset{
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:10px;
+gap:2px;
 }
 .asset img{
-width:120px;
-height:120px;
+width:56px;
+height:56px;
 border-radius:50%;
 }
 .asset-name{
-font-size:4.2rem;
+font-size:2.2rem;
 font-weight:900;
 line-height:1.1;
 white-space:nowrap;
@@ -227,9 +227,9 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 .asset-name span{
-font-size:1.8rem;
+font-size:1rem;
 color:var(--muted);
-margin-left:10px;
+margin-left:6px;
 }
 
 /* PRICE */
@@ -237,50 +237,50 @@ margin-left:10px;
 font-weight:900;
 line-height:1;
 white-space:nowrap;
-font-size:5.4rem;
+font-size:2.6rem;
 }
 .price small{
-font-size:2.4rem;
+font-size:1.2rem;
 vertical-align:super;
-margin:0 6px;
+margin:0 2px;
 color:var(--muted);
 }
 
 .change{
-font-size:2.4rem;
+font-size:1.15rem;
 font-weight:900;
 white-space:nowrap;
 }
 
 .stats{
-margin-top:36px;
+margin-top:14px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:28px;
+gap:14px;
 }
 .stat{
 background:#0b0c1b;
-border-radius:28px;
-padding:28px 18px;
+border-radius:16px;
+padding:14px 8px;
 border:1px solid var(--border);
 }
 .stat span{
 display:block;
-font-size:1.1rem;
+font-size:.6rem;
 letter-spacing:.18em;
 color:var(--muted);
-margin-bottom:14px;
+margin-bottom:6px;
 white-space:nowrap;
 }
 .stat strong{
-font-size:2.6rem;
+font-size:1.25rem;
 font-weight:900;
 white-space:nowrap;
 }
 
 .footer{
-margin-top:36px;
-font-size:1.1rem;
+margin-top:14px;
+font-size:.6rem;
 color:var(--muted);
 line-height:1.4;
 white-space:nowrap;
@@ -349,11 +349,7 @@ z-index:20;
 .modal h3{margin-bottom:10px}
 .modal p{font-size:.85rem;color:var(--muted);margin-bottom:12px}
 
-@media(max-width:1200px){
-.widget{
-transform:scale(.35);
-transform-origin:top center;
-}
+@media(max-width:900px){
 .main{grid-template-columns:1fr}
 }
 </style>
@@ -419,6 +415,7 @@ transform-origin:top center;
 <div class="panel">
 <h3>Crypto BlockState FAQ</h3>
 <p>A Crypto BlockState is a visual snapshot of live cryptocurrency market data.</p>
+<p>Ultra-small prices collapse leading zeros while preserving precision.</p>
 <p>All data is provided by CoinGecko. This site does not provide financial advice.</p>
 <button class="primary" onclick="FAQ.close()">Close</button>
 </div>
