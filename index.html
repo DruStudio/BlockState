@@ -1,6 +1,3 @@
-<!-- =========================
-index.html — FULL WORKING FILE
-========================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +21,6 @@ index.html — FULL WORKING FILE
 html,body{
 width:100%;
 height:100%;
-overflow:hidden;
 background:var(--bg);
 font-family:Inter,system-ui,sans-serif;
 color:var(--text);
@@ -67,9 +63,9 @@ height:100%;
 display:flex;
 flex-direction:column;
 align-items:center;
-justify-content:center;
+justify-content:flex-start;
 text-align:center;
-padding:32px;
+padding:120px 32px 32px;
 }
 
 h1{
@@ -141,7 +137,43 @@ font-size:.7rem;
 letter-spacing:.25em;
 color:var(--muted);
 }
-.faq a{color:var(--muted);text-decoration:none}
+.faq a{color:var(--muted);text-decoration:none;cursor:pointer}
+
+/* MODAL */
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:20;
+}
+.modal .panel{
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:22px;
+padding:24px;
+max-width:520px;
+text-align:left;
+}
+.modal h3{margin-bottom:10px}
+.modal p{
+font-size:.85rem;
+color:var(--muted);
+margin-bottom:12px;
+line-height:1.5;
+}
+.primary{
+width:100%;
+padding:14px;
+border-radius:16px;
+border:none;
+font-weight:900;
+cursor:pointer;
+background:linear-gradient(135deg,var(--accent),#8b5cf6);
+color:white;
+}
 
 @media(max-width:520px){
 .icons{grid-template-columns:1fr;max-width:320px}
@@ -162,7 +194,7 @@ h1{font-size:3rem}
 <div class="container">
 <h1>BlockState</h1>
 <div class="tagline">
-A clean, visual snapshot of the current state of something — built to be shared.
+A clean, visual snapshot of the current state of something — built to be captured and shared.
 </div>
 
 <div class="icons">
@@ -176,7 +208,18 @@ Crypto
 </div>
 
 <div class="faq">
-<a href="#">FAQ</a>
+<a onclick="FAQ.open()">FAQ</a>
+</div>
+</div>
+
+<!-- FAQ MODAL -->
+<div class="modal" id="faq">
+<div class="panel">
+<h3>What is BlockState?</h3>
+<p>BlockState creates clean, visual snapshots of live data at a specific moment in time.</p>
+<p>Each BlockState is designed to be easily captured, saved, and shared — perfect for social media, messaging, or archiving a moment.</p>
+<p>Different sections of the site focus on different data types, starting with Crypto.</p>
+<button class="primary" onclick="FAQ.close()">Close</button>
 </div>
 </div>
 
@@ -206,6 +249,12 @@ x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
 });
 requestAnimationFrame(t);
 })();
+
+/* FAQ */
+const FAQ={
+open(){faq.style.display="flex"},
+close(){faq.style.display="none"}
+};
 </script>
 
 </body>
