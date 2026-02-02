@@ -39,8 +39,10 @@ display:flex;
 justify-content:center;
 gap:28px;
 padding:14px;
+transition:transform .3s ease;
 backdrop-filter:blur(12px);
 }
+nav.hide{transform:translateY(-100%)}
 nav a{
 color:var(--muted);
 text-decoration:none;
@@ -63,7 +65,7 @@ position:relative;
 z-index:2;
 max-width:1200px;
 margin:0 auto;
-padding:120px 16px 220px;
+padding:120px 18px 220px;
 text-align:center;
 }
 
@@ -77,27 +79,24 @@ margin-top:6px;
 font-size:.75rem;
 letter-spacing:.35em;
 color:var(--muted);
-margin-bottom:32px;
+margin-bottom:42px;
 }
 
 /* GRID */
 .main{
 display:grid;
-grid-template-columns:420px 1fr;
-gap:32px;
+grid-template-columns:420px 420px;
+gap:36px;
 justify-content:center;
 }
-@media(max-width:900px){
-.main{grid-template-columns:1fr}
-}
 
-/* SECTIONS */
+/* TITLES */
 .section{
 font-size:.75rem;
 letter-spacing:.4em;
 color:var(--muted);
 font-weight:900;
-margin-bottom:14px;
+margin-bottom:16px;
 }
 
 /* PANELS */
@@ -105,7 +104,7 @@ margin-bottom:14px;
 background:linear-gradient(180deg,var(--panel),var(--panel2));
 border:1px solid var(--border);
 border-radius:22px;
-padding:20px;
+padding:22px;
 }
 
 /* INPUT */
@@ -116,7 +115,7 @@ border-radius:16px;
 border:1px solid var(--border);
 background:#0b0c1b;
 color:white;
-margin-bottom:14px;
+margin-bottom:16px;
 font-size:.9rem;
 }
 
@@ -125,7 +124,7 @@ font-size:.9rem;
 display:grid;
 grid-template-columns:repeat(5,1fr);
 gap:10px;
-margin-bottom:14px;
+margin-bottom:18px;
 }
 .presets button{
 padding:12px 0;
@@ -137,7 +136,7 @@ font-weight:900;
 cursor:pointer;
 }
 
-/* CTA */
+/* PRIMARY CTA */
 .primary{
 width:100%;
 padding:16px;
@@ -150,77 +149,205 @@ background:linear-gradient(135deg,var(--accent),#8b5cf6);
 color:white;
 }
 
+/* TOGGLE */
+.toggle{
+display:flex;
+gap:10px;
+margin:18px 0 14px;
+}
+.toggle button{
+flex:1;
+padding:12px 0;
+border-radius:14px;
+border:1px solid var(--border);
+background:#0b0c1b;
+color:white;
+font-weight:900;
+font-size:.7rem;
+cursor:pointer;
+}
+.toggle button.active{background:var(--accent)}
+
+/* TRENDING */
+.trending ul{list-style:none}
+.trending li{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 6px;
+border-bottom:1px solid var(--border);
+cursor:pointer;
+}
+.trending .left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+.trending img{
+width:22px;
+height:22px;
+border-radius:50%;
+}
+
 /* WIDGET */
 .widget{
-width:1080px;
-height:1080px;
-border-radius:32px;
-padding:36px;
+width:420px;
+height:520px;
+border-radius:28px;
+padding:22px;
 background:linear-gradient(180deg,#12132b,#0a0b1a);
 border:1px solid var(--border);
 display:flex;
 flex-direction:column;
 justify-content:space-between;
 margin:0 auto;
+overflow:hidden;
 }
-@media(max-width:900px){
-.widget{
-transform:scale(.34);
-transform-origin:top center;
-margin-bottom:-360px;
+.widget.up{box-shadow:0 0 16px rgba(34,197,94,.22)}
+.widget.down{box-shadow:0 0 16px rgba(239,68,68,.22)}
+
+.asset{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:6px;
 }
+.asset img{
+width:60px;
+height:60px;
+border-radius:50%;
+}
+.asset-name{
+font-size:2.7rem;
+font-weight:900;
+white-space:nowrap;
 }
 
-.asset{text-align:center}
-.asset img{width:96px;height:96px;border-radius:50%}
-.asset-name{font-size:3.4rem;font-weight:900}
+/* PRICE */
+.price{
+font-size:3rem;
+font-weight:900;
+white-space:nowrap;
+}
+.price small{
+font-size:.9rem;
+vertical-align:super;
+margin-right:2px;
+color:var(--muted);
+}
 
-.price{font-size:4rem;font-weight:900}
+/* CHANGE */
+.change{
+font-size:1.2rem;
+font-weight:900;
+white-space:nowrap;
+}
 
-.change{font-size:1.6rem;font-weight:900}
-
+/* STATS */
 .stats{
+margin-top:12px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:18px;
+gap:12px;
 }
 .stat{
 background:#0b0c1b;
-border-radius:20px;
-padding:22px;
+border-radius:18px;
+padding:16px 10px;
 border:1px solid var(--border);
 }
 .stat span{
 display:block;
-font-size:.7rem;
-letter-spacing:.2em;
+font-size:.65rem;
+letter-spacing:.18em;
 color:var(--muted);
 margin-bottom:6px;
+white-space:nowrap;
 }
-.stat strong{font-size:1.6rem}
+.stat strong{
+font-size:1.45rem;
+font-weight:900;
+white-space:nowrap;
+}
 
+/* FOOTER */
 .footer{
-font-size:.7rem;
+font-size:.6rem;
 color:var(--muted);
+line-height:1.35;
 text-align:center;
-line-height:1.4;
 }
 
-/* CAPTION */
+/* SHARE */
+.actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-bottom:14px;
+}
+.action-btn{
+padding:16px;
+border-radius:18px;
+border:none;
+font-weight:900;
+font-size:.9rem;
+cursor:pointer;
+background:linear-gradient(135deg,var(--accent),#8b5cf6);
+color:white;
+}
+.action-btn.secondary{
+background:#0b0c1b;
+border:1px solid var(--border);
+}
+.action-btn.copied{
+background:var(--up);
+color:#07130a;
+}
+
 .caption{
 background:#0b0c1b;
 border:1px solid var(--border);
 border-radius:18px;
 padding:16px;
 font-size:.85rem;
-margin-top:14px;
+}
+
+/* FAQ */
+.faq{
+position:absolute;
+bottom:24px;
+left:0;
+right:0;
+display:flex;
+justify-content:center;
+font-size:.7rem;
+letter-spacing:.25em;
+color:var(--muted);
+}
+.faq a{color:var(--muted);text-decoration:none;cursor:pointer}
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:20;
+}
+.modal .panel{max-width:560px;text-align:left}
+.modal h3{margin-bottom:12px}
+.modal p{font-size:.85rem;color:var(--muted);margin-bottom:12px;line-height:1.45}
+
+@media(max-width:900px){
+.main{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<nav>
+<nav id="nav">
 <a href="index.html">HOME</a>
 <a href="crypto.html">CRYPTO</a>
 </nav>
@@ -236,31 +363,70 @@ margin-top:14px;
 <div>
 <div class="section">CREATE</div>
 <div class="panel">
-<input id="search" placeholder="Search crypto (Top 250)">
-<div class="presets">
-<button onclick="App.pick('bitcoin')">BTC</button>
-<button onclick="App.pick('ethereum')">ETH</button>
-<button onclick="App.pick('ripple')">XRP</button>
-<button onclick="App.pick('dogecoin')">DOGE</button>
-<button onclick="App.pick('solana')">SOL</button>
-</div>
+<input id="search" list="coins" placeholder="Search crypto (Top 250)">
+<datalist id="coins"></datalist>
+
+<div class="presets" id="presets"></div>
 <button class="primary" onclick="App.generate()">Create BlockState</button>
+
+<div class="toggle">
+<button id="gBtn" class="active" onclick="App.showGainers()">GAINERS</button>
+<button id="lBtn" onclick="App.showLosers()">LOSERS</button>
+</div>
+
+<div class="trending">
+<ul id="trendList"></ul>
+</div>
 </div>
 </div>
 
 <div>
 <div class="section">CAPTURE</div>
 <div id="output"></div>
+
 <div class="section" style="margin-top:36px;">SHARE</div>
 <div class="panel">
+<div class="actions">
+<button class="action-btn" onclick="App.save()">Save BlockState</button>
+<button class="action-btn secondary" id="copyBtn" onclick="App.copy()">Copy Caption</button>
+</div>
 <div class="caption" id="caption"></div>
 </div>
 </div>
 
 </div>
+
+<div class="faq">
+<a onclick="FAQ.open()">CRYPTO FAQ</a>
+</div>
+</div>
+
+<div class="modal" id="faq">
+<div class="panel">
+<h3>Crypto BlockState FAQ</h3>
+<p><strong>What is a Crypto BlockState?</strong><br>
+A Crypto BlockState is a static visual snapshot of cryptocurrency market data captured at a specific moment in time.</p>
+<p><strong>Data source</strong><br>
+Pricing and market data are provided by the CoinGecko API.</p>
+<p><strong>No financial advice</strong><br>
+BlockState.Live does not provide financial, investment, trading, or legal advice.</p>
+<p><strong>Market risk</strong><br>
+Cryptocurrency prices are volatile. Past performance does not guarantee future results.</p>
+<p><strong>Accuracy disclaimer</strong><br>
+Displayed values may be delayed, rounded, or differ from other market data providers.</p>
+<button class="primary" onclick="FAQ.close()">Close</button>
+</div>
 </div>
 
 <script>
+let last=0;
+addEventListener("scroll",()=>{
+const n=document.getElementById("nav");
+const y=scrollY;
+n.classList.toggle("hide",y>last && y>50);
+last=y;
+});
+
 /* PARTICLES */
 const c=document.getElementById("particles"),x=c.getContext("2d");
 let w,h,p=[];
@@ -279,16 +445,20 @@ x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
 requestAnimationFrame(t);
 })();
 
+/* FAQ */
+const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
+
 const App={
-coins:[],
-current:null,
+coins:[],current:null,
 
 fmt(v){
 if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 if(v>=0.01)return v.toFixed(4);
-const s=v.toFixed(10).split(".")[1];
-let z=0;for(const c of s){if(c==="0")z++;else break;}
-return `0.${"0".repeat(z)}${s.slice(z,z+4)}`;
+const s=v.toFixed(10);
+const dec=s.split(".")[1];
+let z=0;
+for(const c of dec){if(c==="0")z++;else break;}
+return `<small>${z}</small>${dec.slice(z,z+4)}`;
 },
 
 cap(v){
@@ -297,31 +467,83 @@ if(v>=1e9)return (v/1e9).toFixed(2)+" B";
 return (v/1e6).toFixed(2)+" M";
 },
 
+makeCaption(){
+const c=this.current;
+const up=c.price_change_percentage_24h>=0;
+const arrow=up?"▲":"▼";
+caption.textContent=
+`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
+Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
+},
+
 async load(){
-const r=await fetch("data/crypto.json");
-const j=await r.json();
-this.coins=j.data;
+const r=await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1");
+this.coins=await r.json();
+this.populate();
+this.showGainers();
 this.show(this.coins[0]);
 },
 
-pick(id){
+populate(){
+coins.innerHTML="";
+presets.innerHTML="";
+this.coins.forEach(c=>{
+const o=document.createElement("option");
+o.value=`${c.symbol.toUpperCase()} — ${c.name}`;
+coins.appendChild(o);
+});
+["bitcoin","ethereum","binancecoin","ripple","dogecoin"].forEach(id=>{
 const c=this.coins.find(x=>x.id===id);
-if(c)this.show(c);
+if(!c)return;
+const b=document.createElement("button");
+b.textContent=c.symbol.toUpperCase();
+b.onclick=()=>this.show(c,true);
+presets.appendChild(b);
+});
+},
+
+render(list){
+trendList.innerHTML="";
+list.slice(0,10).forEach(c=>{
+const li=document.createElement("li");
+li.innerHTML=`<div class="left">
+<img src="${c.image}">
+<span>${c.name}</span>
+</div>
+<span style="color:${c.price_change_percentage_24h>=0?'var(--up)':'var(--down)'}">
+${c.price_change_percentage_24h.toFixed(2)}%
+</span>`;
+li.onclick=()=>this.show(c,true);
+trendList.appendChild(li);
+});
+},
+
+showGainers(){
+gBtn.classList.add("active");
+lBtn.classList.remove("active");
+this.render([...this.coins].sort((a,b)=>b.price_change_percentage_24h-a.price_change_percentage_24h));
+},
+
+showLosers(){
+lBtn.classList.add("active");
+gBtn.classList.remove("active");
+this.render([...this.coins].sort((a,b)=>a.price_change_percentage_24h-b.price_change_percentage_24h));
 },
 
 generate(){
 const v=search.value.toLowerCase();
 const c=this.coins.find(x=>v.includes(x.symbol)||v.includes(x.name.toLowerCase()));
-if(c)this.show(c);
+if(c)this.show(c,true);
 },
 
-show(c){
+show(c,scroll){
 this.current=c;
 const up=c.price_change_percentage_24h>=0;
 const arrow=up?"▲":"▼";
+const delta=Math.abs(c.price_change_24h);
 
 output.innerHTML=`
-<div class="widget">
+<div class="widget ${up?'up':'down'}" id="widget">
 <div>
 <div class="asset">
 <img src="${c.image}">
@@ -331,15 +553,14 @@ output.innerHTML=`
 <div class="price">$${this.fmt(c.current_price)}</div>
 
 <div class="change" style="color:${up?'var(--up)':'var(--down)'}">
-${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
-($${this.fmt(Math.abs(c.price_change_24h))})
+${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ($${this.fmt(delta)})
 </div>
 
 <div class="stats">
 <div class="stat"><span>24H HIGH</span><strong>$${this.fmt(c.high_24h)}</strong></div>
 <div class="stat"><span>24H LOW</span><strong>$${this.fmt(c.low_24h)}</strong></div>
 <div class="stat"><span>MARKET CAP</span><strong>${this.cap(c.market_cap)}</strong></div>
-<div class="stat"><span>RANK</span><strong>#${c.market_cap_rank}</strong></div>
+<div class="stat"><span>MC RANK</span><strong>#${c.market_cap_rank}</strong></div>
 </div>
 </div>
 
@@ -348,21 +569,32 @@ ${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
 <div>Data provided by CoinGecko • BlockState.Live</div>
 </div>
 </div>`;
+this.makeCaption();
+if(scroll)document.getElementById("widget").scrollIntoView({behavior:"smooth",block:"center"});
+},
 
-caption.textContent=
-`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
-Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
+save(){
+const node=document.getElementById("widget");
+html2canvas(node,{backgroundColor:null,useCORS:true,scale:2}).then(canvas=>{
+const a=document.createElement("a");
+a.download="blockstate.png";
+a.href=canvas.toDataURL("image/png");
+a.click();
+});
+},
+
+copy(){
+navigator.clipboard.writeText(caption.textContent);
+copyBtn.classList.add("copied");
+copyBtn.textContent="Copied ✓";
+setTimeout(()=>{
+copyBtn.classList.remove("copied");
+copyBtn.textContent="Copy Caption";
+},1600);
 }
 };
 
 document.addEventListener("DOMContentLoaded",()=>App.load());
-
-// 5-minute boundary refresh
-(function(){
-const n=new Date();
-const ms=(5-(n.getMinutes()%5))*60000-n.getSeconds()*1000-n.getMilliseconds();
-setTimeout(()=>location.reload(),ms);
-})();
 </script>
 
 </body>
