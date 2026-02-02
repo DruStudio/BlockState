@@ -1,3 +1,6 @@
+<!-- =========================
+index.html — FULL WORKING FILE
+========================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +24,7 @@
 html,body{
 width:100%;
 height:100%;
+overflow:hidden;
 background:var(--bg);
 font-family:Inter,system-ui,sans-serif;
 color:var(--text);
@@ -36,7 +40,9 @@ justify-content:center;
 gap:28px;
 padding:14px;
 z-index:10;
+transition:transform .3s ease;
 }
+nav.hide{transform:translateY(-100%)}
 nav a{
 color:var(--muted);
 text-decoration:none;
@@ -45,16 +51,26 @@ font-size:.75rem;
 letter-spacing:.25em;
 }
 
+/* PARTICLES */
+canvas{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
+}
+
 /* HERO */
 .container{
 position:relative;
+z-index:2;
 height:100%;
 display:flex;
 flex-direction:column;
 align-items:center;
-justify-content:flex-start;
+justify-content:center;
 text-align:center;
-padding:120px 32px 32px;
+padding:32px;
+margin-top:-60px;
 }
 
 h1{
@@ -84,73 +100,60 @@ gap:16px;
 background:var(--panel);
 border:1px solid var(--border);
 border-radius:18px;
-padding:18px;
+padding:20px 14px;
 font-weight:900;
-font-size:.9rem;
+font-size:.85rem;
+text-align:center;
 cursor:pointer;
+position:relative;
+line-height:1.2;
 }
 
 .icon span{
 display:block;
 margin-top:6px;
-font-size:.65rem;
+font-size:.6rem;
 letter-spacing:.18em;
 color:var(--muted);
+}
+
+.icon.live{
+box-shadow:0 0 0 1px rgba(108,124,255,.35),0 0 14px rgba(108,124,255,.25);
+}
+
+@keyframes pulse{
+0%{box-shadow:0 0 6px rgba(108,124,255,.25)}
+50%{box-shadow:0 0 12px rgba(108,124,255,.4)}
+100%{box-shadow:0 0 6px rgba(108,124,255,.25)}
 }
 
 /* FAQ */
 .faq{
 position:absolute;
-bottom:20px;
+bottom:16px;
+display:flex;
+gap:24px;
 font-size:.7rem;
 letter-spacing:.25em;
 color:var(--muted);
 }
-.faq a{cursor:pointer}
+.faq a{color:var(--muted);text-decoration:none}
 
-/* MODAL */
-.modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.6);
-display:none;
-align-items:center;
-justify-content:center;
-}
-.modal .panel{
-background:var(--panel);
-border:1px solid var(--border);
-border-radius:22px;
-padding:26px;
-max-width:520px;
-text-align:left;
-}
-.modal h3{margin-bottom:10px}
-.modal p{
-font-size:.9rem;
-color:var(--muted);
-line-height:1.6;
-margin-bottom:12px;
-}
-.primary{
-width:100%;
-padding:14px;
-border-radius:16px;
-border:none;
-font-weight:900;
-cursor:pointer;
-background:linear-gradient(135deg,var(--accent),#8b5cf6);
-color:white;
+@media(max-width:520px){
+.icons{grid-template-columns:1fr;max-width:320px}
+h1{font-size:3rem}
 }
 </style>
 </head>
 
 <body>
 
-<nav>
+<nav id="nav">
 <a href="index.html">HOME</a>
 <a href="crypto.html">CRYPTO</a>
 </nav>
+
+<canvas id="particles"></canvas>
 
 <div class="container">
 <h1>BlockState</h1>
@@ -159,26 +162,56 @@ Visualize the moment. Capture the state. Share it.
 </div>
 
 <div class="icons">
-<div class="icon" onclick="location.href='crypto.html'">Crypto<span>LIVE</span></div>
-<div class="icon">Stocks<span>SOON</span></div>
-<div class="icon">Ideas<span>SOON</span></div>
-<div class="icon">Memes<span>SOON</span></div>
+<div class="icon live" onclick="location.href='crypto.html'">
+Crypto
+<span>LIVE</span>
+</div>
+<div class="icon">
+Stocks
+<span>COMING SOON</span>
+</div>
+<div class="icon">
+Weather
+<span>COMING SOON</span>
+</div>
+<div class="icon">
+U.S. Debt
+<span>COMING SOON</span>
+</div>
 </div>
 
 <div class="faq">
-<a onclick="faq.style.display='flex'">FAQ</a>
+<a href="#">FAQ</a>
 </div>
 </div>
 
-<div class="modal" id="faq">
-<div class="panel">
-<h3>What is BlockState?</h3>
-<p>BlockState creates clean, visual snapshots of live data at a specific moment in time.</p>
-<p>Each snapshot is designed to be captured, saved, and shared — perfect for social media or archiving a moment.</p>
-<p>Different pages focus on different data types, starting with Crypto.</p>
-<button class="primary" onclick="faq.style.display='none'">Close</button>
-</div>
-</div>
+<script>
+let last=0;
+addEventListener("scroll",()=>{
+const n=document.getElementById("nav");
+const y=scrollY;
+n.classList.toggle("hide",y>last && y>50);
+last=y;
+});
+
+/* PARTICLES */
+const c=document.getElementById("particles"),x=c.getContext("2d");
+let w,h,p=[];
+function r(){w=c.width=innerWidth;h=c.height=innerHeight}
+addEventListener("resize",r);r();
+for(let i=0;i<120;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.4});
+(function t(){
+x.clearRect(0,0,w,h);
+x.fillStyle="rgba(108,124,255,.4)";
+p.forEach(o=>{
+o.x+=o.vx;o.y+=o.vy;
+if(o.x<0)o.x=w;if(o.x>w)o.x=0;
+if(o.y<0)o.y=h;if(o.y>h)o.y=0;
+x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
+});
+requestAnimationFrame(t);
+})();
+</script>
 
 </body>
 </html>
