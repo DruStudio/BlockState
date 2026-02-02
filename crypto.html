@@ -463,27 +463,39 @@ const App={
 coins:[],current:null,updatedAt:null,
 
 fmt(v){
-if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-if(v>=0.01)return v.toFixed(4);
-const s=v.toFixed(10).split(".")[1];
-let z=0;for(const c of s){if(c==="0")z++;else break;}
-return `<small>${z}</small>${s.slice(z,z+4)}`;
-},
+  if(v >= 1){
+    return v.toLocaleString(undefined,{
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    });
+  }
 
-cap(v){
-if(v>=1e12)return (v/1e12).toFixed(2)+" T";
-if(v>=1e9)return (v/1e9).toFixed(2)+" B";
-return (v/1e6).toFixed(2)+" M";
-},
+  if(v >= 0.01){
+    return v.toFixed(4);
+  }
+
+  // ultra-small prices
+  const s = v.toFixed(12);
+  const dec = s.split(".")[1];
+  let z = 0;
+
+  for(const c of dec){
+    if(c === "0") z++;
+    else break;
+  }
+
+  return `0.<small>${z}</small>${dec.slice(z, z + 4)}`;
+}
 
 makeCaption(){
-const c=this.current;
-const up=c.price_change_percentage_24h>=0;
-const arrow=up?"▲":"▼";
-caption.textContent=
-`${c.symbol.toUpperCase()} is ${up?'up':'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
+  const c = this.current;
+  const up = c.price_change_percentage_24h >= 0;
+  const arrow = up ? "▲" : "▼";
+
+  caption.innerHTML =
+`${c.symbol.toUpperCase()} is ${up ? 'up' : 'down'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% ${arrow}
 Price: $${this.fmt(c.current_price)} • Market Cap: ${this.cap(c.market_cap)} #BlockState`;
-},
+}
 
 async load(){
 const r=await fetch("data/crypto.json",{cache:"no-store"});
