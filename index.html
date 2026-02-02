@@ -1,114 +1,212 @@
+<!-- =========================
+index.html — FULL WORKING FILE
+========================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BlockState</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-html,body{
-margin:0;
-padding:0;
-background:#07070c;
-color:#fff;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-overflow-x:hidden;
+:root{
+--bg:#07070c;
+--panel:#0b0b18;
+--border:#24243a;
+--text:#ffffff;
+--muted:#a3a8c2;
+--accent:#6c7cff;
 }
 
-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+width:100%;
+height:100%;
+overflow:hidden;
+background:var(--bg);
+font-family:Inter,system-ui,sans-serif;
+color:var(--text);
+}
 
+/* NAV */
+nav{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:center;
+gap:28px;
+padding:14px;
+z-index:10;
+transition:transform .3s ease;
+}
+nav.hide{transform:translateY(-100%)}
+nav a{
+color:var(--muted);
+text-decoration:none;
+font-weight:900;
+font-size:.75rem;
+letter-spacing:.25em;
+}
+
+/* PARTICLES */
+canvas{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
+}
+
+/* HERO */
 .container{
 position:relative;
 z-index:2;
-max-width:420px;
-margin:auto;
-padding:64px 16px 120px;
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:32px;
 }
 
-.title{
-text-align:center;
-font-size:2.8rem;
+h1{
+font-size:3.6rem;
 font-weight:900;
-color:#6c7cff;
-margin-bottom:6px;
+color:var(--accent);
 }
 
-.subtitle{
-text-align:center;
-letter-spacing:.35em;
-font-size:.75rem;
-color:#9aa0b4;
-margin-bottom:28px;
+.tagline{
+margin-top:14px;
+font-size:1.05rem;
+color:var(--muted);
+max-width:640px;
 }
 
-.nav{
+/* ICON GRID */
+.icons{
+margin-top:42px;
+width:100%;
+max-width:560px;
 display:grid;
-gap:14px;
+grid-template-columns:repeat(2,1fr);
+gap:16px;
 }
 
-.nav a{
-text-decoration:none;
-}
-
-.panel{
-background:linear-gradient(135deg,#141425,#1d1d32);
-border:1px solid #2a2a3a;
-border-radius:22px;
-padding:22px;
-text-align:center;
+.icon{
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:18px;
+padding:18px;
 font-weight:900;
-font-size:1.2rem;
-color:white;
-}
-
-.footer{
+font-size:.9rem;
 text-align:center;
-font-size:.65rem;
-color:#9aa0b4;
-margin-top:28px;
+cursor:pointer;
+position:relative;
 }
 
-@media(max-width:480px){
-.title{font-size:2.3rem}
+.icon.live::after{
+content:"";
+position:absolute;
+inset:-2px;
+border-radius:20px;
+box-shadow:0 0 6px rgba(108,124,255,.25);
+animation:pulse 3.5s infinite;
+pointer-events:none;
+}
+
+@keyframes pulse{
+0%{box-shadow:0 0 5px rgba(108,124,255,.2)}
+50%{box-shadow:0 0 9px rgba(108,124,255,.3)}
+100%{box-shadow:0 0 5px rgba(108,124,255,.2)}
+}
+
+.icon span{
+display:block;
+margin-top:6px;
+font-size:.65rem;
+letter-spacing:.18em;
+color:var(--muted);
+}
+
+/* FAQ */
+.faq{
+position:absolute;
+bottom:16px;
+display:flex;
+gap:24px;
+font-size:.7rem;
+letter-spacing:.25em;
+color:var(--muted);
+}
+.faq a{color:var(--muted);text-decoration:none}
+
+@media(max-width:520px){
+.icons{grid-template-columns:1fr;max-width:320px}
+h1{font-size:3rem}
 }
 </style>
 </head>
 
 <body>
+
+<nav id="nav">
+<a href="index.html">HOME</a>
+<a href="crypto.html">CRYPTO</a>
+</nav>
+
 <canvas id="particles"></canvas>
 
 <div class="container">
-<div class="title">BlockState</div>
-<div class="subtitle">CREATE · CAPTURE · SHARE</div>
-
-<div class="nav">
-<a href="crypto.html"><div class="panel">Crypto</div></a>
-<a href="#"><div class="panel">Stocks (Soon)</div></a>
-<a href="#"><div class="panel">Indexes (Soon)</div></a>
+<h1>BlockState</h1>
+<div class="tagline">
+A clean, visual snapshot of the current state of something — built to be shared.
 </div>
 
-<div class="footer">
-© 2026 BlockState.Live
+<div class="icons">
+<div class="icon live" onclick="location.href='crypto.html'">
+Crypto
+<span>LIVE</span>
+</div>
+<div class="icon">Stocks<span>UNDER CONSTRUCTION</span></div>
+<div class="icon">Ideas<span>UNDER CONSTRUCTION</span></div>
+<div class="icon">Memes<span>UNDER CONSTRUCTION</span></div>
+</div>
+
+<div class="faq">
+<a href="#">FAQ</a>
 </div>
 </div>
 
 <script>
+let last=0;
+addEventListener("scroll",()=>{
+const n=document.getElementById("nav");
+const y=scrollY;
+n.classList.toggle("hide",y>last && y>50);
+last=y;
+});
+
+/* PARTICLES */
 const c=document.getElementById("particles"),x=c.getContext("2d");
 let w,h,p=[];
 function r(){w=c.width=innerWidth;h=c.height=innerHeight}
 addEventListener("resize",r);r();
-for(let i=0;i<70;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});
+for(let i=0;i<120;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.4});
 (function t(){
 x.clearRect(0,0,w,h);
-x.fillStyle="rgba(108,124,255,.35)";
+x.fillStyle="rgba(108,124,255,.4)";
 p.forEach(o=>{
 o.x+=o.vx;o.y+=o.vy;
-if(o.x<0)o.x=w;if(o.y<0)o.y=h;
-if(o.x>w)o.x=0;if(o.y>h)o.y=0;
-x.fillRect(o.x,o.y,1,1)
+if(o.x<0)o.x=w;if(o.x>w)o.x=0;
+if(o.y<0)o.y=h;if(o.y>h)o.y=0;
+x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
 });
 requestAnimationFrame(t);
 })();
 </script>
+
 </body>
 </html>
