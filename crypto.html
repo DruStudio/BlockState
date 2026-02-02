@@ -6,7 +6,7 @@
 <title>BlockState · Crypto</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npmjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
 :root{
@@ -202,6 +202,7 @@ flex-direction:column;
 justify-content:center;
 gap:10px;
 margin:0 auto;
+overflow:hidden;
 }
 .widget.up{box-shadow:0 0 16px rgba(34,197,94,.22)}
 .widget.down{box-shadow:0 0 16px rgba(239,68,68,.22)}
@@ -213,65 +214,79 @@ align-items:center;
 gap:2px;
 }
 .asset img{
-width:56px;
-height:56px;
+width:52px;
+height:52px;
 border-radius:50%;
 }
 .asset-name{
-font-size:2.2rem;
+font-size:2rem;
 font-weight:900;
 line-height:1.1;
+max-width:100%;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 .asset-name span{
-font-size:1rem;
+font-size:.9rem;
 color:var(--muted);
 margin-left:6px;
 }
 
-/* PRICE — SAFE FOR SHIB/BONK */
+/* PRICE (TIERED & SAFE) */
 .price{
 font-weight:900;
 line-height:1;
 white-space:nowrap;
 }
-.price.lg{font-size:3rem}
-.price.md{font-size:2.4rem}
-.price.sm{font-size:1.95rem}
+.price.xl{font-size:3rem}
+.price.lg{font-size:2.6rem}
+.price.md{font-size:2.2rem}
+.price.sm{font-size:1.85rem}
 
+/* CHANGE */
 .change{
-font-size:1.25rem;
+font-size:1.15rem;
 font-weight:900;
+white-space:nowrap;
 }
 
+/* STATS */
 .stats{
-margin-top:18px;
+margin-top:14px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:16px;
+gap:14px;
 }
 .stat{
 background:#0b0c1b;
-border-radius:18px;
-padding:18px 10px;
+border-radius:16px;
+padding:14px 8px;
 border:1px solid var(--border);
 }
 .stat span{
 display:block;
-font-size:.65rem;
+font-size:.6rem;
 letter-spacing:.18em;
 color:var(--muted);
-margin-bottom:8px;
+margin-bottom:6px;
+white-space:nowrap;
 }
 .stat strong{
-font-size:1.45rem;
+font-size:1.25rem;
 font-weight:900;
+white-space:nowrap;
 }
 
+/* FOOTER */
 .footer{
-margin-top:18px;
-font-size:.65rem;
+margin-top:14px;
+font-size:.6rem;
 color:var(--muted);
 line-height:1.4;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
 /* SHARE */
@@ -404,57 +419,32 @@ z-index:20;
 <div class="panel">
 <h3>Crypto BlockState FAQ</h3>
 <p>A Crypto BlockState is a visual snapshot of live cryptocurrency market data at a specific moment.</p>
-<p>Prices automatically scale so even very small-value coins fit cleanly.</p>
+<p>Prices and text automatically scale to ensure everything fits cleanly.</p>
 <p>All data is provided by CoinGecko. This site does not provide financial advice.</p>
 <button class="primary" onclick="FAQ.close()">Close</button>
 </div>
 </div>
 
 <script>
-let last=0;
-addEventListener("scroll",()=>{
-const n=document.getElementById("nav");
-const y=scrollY;
-n.classList.toggle("hide",y>last && y>50);
-last=y;
-});
-
-/* PARTICLES */
-const c=document.getElementById("particles"),x=c.getContext("2d");
-let w,h,p=[];
-function r(){w=c.width=innerWidth;h=c.height=innerHeight}
-addEventListener("resize",r);r();
-for(let i=0;i<120;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.6+.4});
-(function t(){
-x.clearRect(0,0,w,h);
-x.fillStyle="rgba(108,124,255,.4)";
-p.forEach(o=>{
-o.x+=o.vx;o.y+=o.vy;
-if(o.x<0)o.x=w;if(o.x>w)o.x=0;
-if(o.y<0)o.y=h;if(o.y>h)o.y=0;
-x.beginPath();x.arc(o.x,o.y,o.r,0,Math.PI*2);x.fill();
-});
-requestAnimationFrame(t);
-})();
-
-/* FAQ */
 const FAQ={open(){faq.style.display="flex"},close(){faq.style.display="none"}};
 
-/* APP */
 const App={
 coins:[],current:null,
 
 fmt(v){
-if(v>=1)return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-if(v>=.01)return v.toFixed(4);
-return v.toFixed(8);
+if(v>=1000) return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+if(v>=1) return v.toFixed(4);
+if(v>=0.01) return v.toFixed(6);
+if(v>=0.0001) return v.toFixed(8);
+return v.toFixed(10);
 },
 
 priceClass(v){
-const len=this.fmt(v).length;
-if(len>12)return"price sm";
-if(len>9)return"price md";
-return"price lg";
+const s=this.fmt(v).length;
+if(s<=7) return "price xl";
+if(s<=9) return "price lg";
+if(s<=11) return "price md";
+return "price sm";
 },
 
 cap(v){
@@ -466,7 +456,7 @@ return (v/1e6).toFixed(2)+" M";
 delta(v,price){
 if(price>=1)return v.toFixed(2);
 if(price>=.01)return v.toFixed(4);
-return v.toFixed(8);
+return v.toFixed(6);
 },
 
 makeCaption(){
@@ -548,7 +538,7 @@ output.innerHTML=`
 <div class="widget ${up?'up':'down'}" id="widget">
 <div class="asset">
 <img src="${c.image}">
-<div class="asset-name">${c.name.length>16?c.symbol.toUpperCase():c.name}<span>${c.symbol.toUpperCase()}</span></div>
+<div class="asset-name">${c.name}<span>${c.symbol.toUpperCase()}</span></div>
 </div>
 
 <div class="${this.priceClass(c.current_price)}">$${this.fmt(c.current_price)}</div>
@@ -566,8 +556,7 @@ ${arrow} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%
 </div>
 
 <div class="footer">
-Captured • ${new Date().toUTCString()}<br>
-Data provided by CoinGecko • BlockState.Live
+Captured • ${new Date().toUTCString()} • CoinGecko
 </div>
 </div>`;
 this.makeCaption();
