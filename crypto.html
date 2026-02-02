@@ -1,231 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>BlockState — Crypto</title>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-:root{
---bg:#07070c;--panel:#141425;--panel2:#0f0f1a;
---border:#2a2a3a;--text:#fff;--muted:#9aa0b4;
---accent:#6c7cff;--green:#22c55e;--red:#ef4444;
+html,body{
+margin:0;
+padding:0;
+background:#07070c;
+color:#fff;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+overflow-x:hidden;
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 
-/* PARTICLES */
 canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* NAV + TOP LEFT */
-.nav{position:fixed;top:0;width:100%;display:flex;justify-content:center;gap:28px;padding:6px 0;letter-spacing:.35em;font-size:.75rem;color:var(--muted);z-index:5;background:linear-gradient(to bottom, rgba(7,7,12,.95), rgba(7,7,12,0))}
-.top-left{position:fixed;top:6px;left:14px;z-index:6;display:flex;gap:12px;font-size:.7rem;letter-spacing:.25em;color:var(--muted)}
-.top-left span{cursor:pointer}
-
-/* PAGE */
-.container{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:90px 16px 140px}
-h1{text-align:center;font-size:3rem;font-weight:900;color:var(--accent)}
-.subtitle{text-align:center;font-size:.75rem;letter-spacing:.4em;color:var(--muted);margin-bottom:24px}
-
-/* GRID */
-.grid{display:grid;grid-template-columns:420px 1fr;gap:28px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-
-/* SECTION TITLES */
-.section{text-align:center;font-size:.75rem;letter-spacing:.4em;color:var(--muted);margin-bottom:8px}
-
-/* PANELS */
-.panel{background:linear-gradient(135deg,var(--panel),#1d1d32);border:1px solid var(--border);border-radius:22px;padding:18px}
-
-/* CREATE */
-input{width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);background:#10101a;color:white;margin-bottom:14px}
-.presets{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
-.presets button{padding:10px;border-radius:12px;border:1px solid var(--border);background:#10101a;color:white;font-weight:800;cursor:pointer}
-.primary{width:100%;padding:14px;border-radius:16px;border:none;font-weight:900;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:white}
-
-/* TOGGLE + TRENDING */
-.toggle{display:flex;gap:8px;margin-top:14px}
-.toggle button{flex:1;padding:10px;border-radius:14px;border:1px solid var(--border);background:#10101a;color:white;font-weight:800}
-.toggle button.active{background:linear-gradient(135deg,var(--accent),#8b5cf6);border:none}
-.trending{margin-top:10px}
-.trending li{list-style:none;display:flex;justify-content:center;align-items:center;gap:10px;padding:10px;border-bottom:1px solid var(--border);cursor:pointer;text-align:center}
-.trending img{width:22px;height:22px;border-radius:50%}
-
-/* CAPTURE */
-.capture-wrap{
-max-width:520px;
-margin:0 auto;
+.container{
+position:relative;
+z-index:2;
+max-width:420px;
+margin:auto;
+padding:64px 16px 120px;
 }
-.widget{
-width:100%;
-aspect-ratio:1/1;
-background:var(--panel2);
-border-radius:26px;
-padding:22px;
+
+.title{
 text-align:center;
-border:2px solid var(--border);
+font-size:2.6rem;
+font-weight:900;
+color:#6c7cff;
 }
-.widget.positive{border-color:var(--green)}
-.widget.negative{border-color:var(--red)}
-.coin{display:flex;justify-content:center;align-items:center;gap:10px}
-.coin img{width:56px;height:56px;border-radius:50%}
-.price{font-size:3rem;font-weight:900}
-.change{font-size:1.25rem;font-weight:900}
 
-/* STATS */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
-.stat{background:#0d0d16;border-radius:18px;padding:16px;text-align:center}
-.stat span{font-size:.65rem;color:var(--muted)}
-.stat strong{font-size:1.1rem}
-
-/* SHARE */
-.share-wrap{
-max-width:520px;
-margin:18px auto 0;
+.subtitle{
+text-align:center;
+letter-spacing:.35em;
+font-size:.75rem;
+color:#9aa0b4;
+margin-bottom:28px;
 }
-.share-buttons{display:flex;gap:10px}
-.share-buttons button{flex:1;padding:14px;border-radius:16px;border:none;font-weight:900;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:white}
-.caption{margin-top:10px;padding:14px;border-radius:14px;background:#10101a;border:1px solid var(--border);font-size:.85rem;color:var(--muted)}
 
-/* FAQ */
-#faq{position:fixed;inset:0;display:none;justify-content:center;align-items:center;background:rgba(0,0,0,.6);z-index:10}
+.section{
+text-align:center;
+letter-spacing:.35em;
+font-size:.7rem;
+color:#9aa0b4;
+margin:28px 0 12px;
+}
+
+.panel{
+background:linear-gradient(135deg,#141425,#1d1d32);
+border:1px solid #2a2a3a;
+border-radius:22px;
+padding:18px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:2px solid #2a2a3a;
+background:#10101a;
+color:white;
+margin-bottom:14px;
+}
+
+.presets{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:8px;
+margin-bottom:14px;
+}
+
+.presets button,.primary{
+padding:12px;
+border-radius:14px;
+border:none;
+background:#10101a;
+color:white;
+font-weight:800;
+}
+
+.primary{
+background:linear-gradient(135deg,#6c7cff,#8b5cf6);
+}
+
+.capture-frame{
+width:1080px;
+height:1080px;
+background:#0f0f1a;
+border-radius:32px;
+padding:64px;
+box-sizing:border-box;
+transform:scale(.38);
+transform-origin:top center;
+margin:auto;
+}
+
+.widget{text-align:center}
+
+.price{
+font-size:3rem;
+font-weight:900;
+margin:14px 0;
+}
+
+.change{
+font-size:1.2rem;
+font-weight:800;
+text-align:center;
+}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-top:20px;
+}
+
+.stat{
+background:#0d0d16;
+border-radius:14px;
+padding:14px;
+font-size:.85rem;
+}
+
+.footer{
+margin-top:20px;
+font-size:.65rem;
+color:#9aa0b4;
+text-align:center;
+}
+
+.share-buttons{
+display:flex;
+gap:10px;
+}
+
+.share-buttons button{
+flex:1;
+padding:14px;
+border-radius:14px;
+border:none;
+font-weight:900;
+background:linear-gradient(135deg,#6c7cff,#8b5cf6);
+color:white;
+cursor:pointer;
+}
+
+@media(max-width:480px){
+.title{font-size:2.2rem}
+}
 </style>
 </head>
 
 <body>
-
-<canvas></canvas>
-
-<div class="top-left">
-<span onclick="openFAQ()">FAQ</span>
-<span>v6.9.6</span>
-</div>
-
-<div class="nav">
-<a href="index.html" style="color:inherit;text-decoration:none">HOME</a>
-<span>CRYPTO</span>
-</div>
+<canvas id="particles"></canvas>
 
 <div class="container">
-<h1>BlockState</h1>
+
+<div class="title">BlockState</div>
 <div class="subtitle">CRYPTO</div>
 
-<div class="grid">
-
-<div>
 <div class="section">CREATE</div>
 <div class="panel">
-<input id="search" list="coinList" placeholder="Search crypto (Top 250)">
-<datalist id="coinList"></datalist>
-
-<div class="presets" id="presets"></div>
-<button class="primary" onclick="App.generate()">Create BlockState</button>
-
-<div class="toggle">
-<button id="gBtn" class="active" onclick="App.setMode('gainers')">GAINERS</button>
-<button id="lBtn" onclick="App.setMode('losers')">LOSERS</button>
+<input placeholder="Search crypto (Top 250)">
+<div class="presets">
+<button>BTC</button><button>ETH</button><button>BNB</button><button>XRP</button><button>DOGE</button>
+</div>
+<button class="primary">Create BlockState</button>
 </div>
 
-<ul class="trending" id="trendList"></ul>
-</div>
-</div>
-
-<div>
 <div class="section">CAPTURE</div>
-<div class="capture-wrap" id="output"></div>
-
-<div class="section" style="margin-top:18px">SHARE</div>
-<div class="share-wrap panel">
-<div class="share-buttons">
-<button onclick="App.save()">Save BlockState</button>
-<button onclick="App.copy()">Copy Caption</button>
-</div>
-<div class="caption" id="caption"></div>
-</div>
+<div id="capture" class="capture-frame">
+<div class="widget">
+<div style="font-size:1.6rem;font-weight:900">
+Bitcoin <span style="font-size:.8rem;color:#9aa0b4">BTC</span>
 </div>
 
+<div class="price">$76,721.00</div>
+<div class="change" style="color:#ef4444">▼ 24 hours −1.82%</div>
+
+<div class="stats">
+<div class="stat">24h High<br><strong>$79,242</strong></div>
+<div class="stat">24h Low<br><strong>$76,580</strong></div>
+<div class="stat">Market Cap<br><strong>$1.53T</strong></div>
+<div class="stat">MC Rank<br><strong>#1</strong></div>
+</div>
+
+<div class="footer">
+Captured • Sun, 01 Feb 2026 22:10 GMT<br>
+Data via CoinGecko • BlockState.Live
+</div>
 </div>
 </div>
 
-<div id="faq">
+<div class="section">SHARE</div>
 <div class="panel">
-<h3>Crypto FAQ</h3>
-<p>Live crypto snapshots powered by CoinGecko.</p>
-<p>No financial advice.</p>
-<button class="primary" onclick="closeFAQ()">Close</button>
+<div class="share-buttons">
+<button onclick="save()">Save BlockState</button>
+<button onclick="copyCaption()">Copy Caption</button>
 </div>
+</div>
+
 </div>
 
 <script>
-/* particles */
-const c=document.querySelector("canvas"),x=c.getContext("2d");
-let w,h;
-function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
-resize();addEventListener("resize",resize);
-if(!window.__particles){window.__particles=[...Array(70)].map(()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25}))}
-(function loop(){x.clearRect(0,0,w,h);x.fillStyle="rgba(108,124,255,.35)";window.__particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=w;if(p.y<0)p.y=h;if(p.x>w)p.x=0;if(p.y>h)p.y=0;x.fillRect(p.x,p.y,1,1)});requestAnimationFrame(loop)})();
-
-/* APP */
-const App={
-coins:[],current:null,mode:'gainers',
-async init(){
-const r=await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1");
-this.coins=await r.json();
-coinList.innerHTML=this.coins.map(c=>`<option value="${c.name} (${c.symbol.toUpperCase()})">`).join("");
-this.renderPresets();
-this.setMode('gainers');
-this.show(this.coins.find(c=>c.id==='bitcoin'));
-},
-renderPresets(){
-["bitcoin","ethereum","binancecoin","ripple","dogecoin"].forEach(id=>{
-const c=this.coins.find(x=>x.id===id);
-if(c){const b=document.createElement("button");b.textContent=c.symbol.toUpperCase();b.onclick=()=>this.show(c);presets.appendChild(b);}
+function save(){
+html2canvas(document.getElementById("capture"),{
+backgroundColor:"#0f0f1a",
+scale:1
+}).then(c=>{
+const a=document.createElement("a");
+a.download="blockstate.png";
+a.href=c.toDataURL();
+a.click();
 });
-},
-setMode(m){this.mode=m;gBtn.classList.toggle("active",m==="gainers");lBtn.classList.toggle("active",m==="losers");this.renderTrending()},
-renderTrending(){
-trendList.innerHTML="";
-[...this.coins]
-.sort((a,b)=>this.mode==="gainers"?b.price_change_percentage_24h-a.price_change_percentage_24h:a.price_change_percentage_24h-b.price_change_percentage_24h)
-.slice(0,10)
-.forEach(c=>{
-const li=document.createElement("li");
-li.innerHTML=`<img src="${c.image}">${c.name} <span style="color:${c.price_change_percentage_24h>=0?'var(--green)':'var(--red)'}">${c.price_change_percentage_24h.toFixed(2)}%</span>`;
-li.onclick=()=>this.show(c);
-trendList.appendChild(li);
-});
-},
-show(c){
-this.current=c;
-output.innerHTML=`
-<div class="widget ${c.price_change_percentage_24h>=0?'positive':'negative'}">
-<div class="coin"><img src="${c.image}"><div><strong>${c.name}</strong><div>${c.symbol.toUpperCase()}</div></div></div>
-<div class="price">$${c.current_price}</div>
-<div class="change">${c.price_change_percentage_24h>=0?'▲':'▼'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}%</div>
-<div class="stats">
-<div class="stat"><span>24H HIGH</span><strong>$${c.high_24h}</strong></div>
-<div class="stat"><span>24H LOW</span><strong>$${c.low_24h}</strong></div>
-<div class="stat"><span>MARKET CAP</span><strong>${c.market_cap}</strong></div>
-<div class="stat"><span>MC RANK</span><strong>#${c.market_cap_rank}</strong></div>
-</div>
-</div>`;
-caption.textContent=`${c.name} ${c.price_change_percentage_24h>=0?'gained':'lost'} ${Math.abs(c.price_change_percentage_24h).toFixed(2)}% #${c.symbol.toUpperCase()} #BlockState`;
-},
-generate(){
-const v=search.value.toLowerCase();
-const c=this.coins.find(x=>v.includes(x.name.toLowerCase())||v.includes(x.symbol));
-if(c)this.show(c);
-},
-save(){html2canvas(output.firstChild,{scale:2,useCORS:true}).then(c=>{const a=document.createElement("a");a.href=c.toDataURL();a.download="blockstate.png";a.click()})},
-copy(){navigator.clipboard.writeText(caption.textContent)}
-};
-App.init();
+}
 
-function openFAQ(){faq.style.display="flex"}
-function closeFAQ(){faq.style.display="none"}
+function copyCaption(){
+navigator.clipboard.writeText(
+"Bitcoin (BTC) — $76,721\n24h −1.82%\nGenerated with BlockState.Live"
+);
+alert("Caption copied!");
+}
+
+const c=document.getElementById("particles"),x=c.getContext("2d");
+let w,h,p=[];
+function r(){w=c.width=innerWidth;h=c.height=innerHeight}
+addEventListener("resize",r);r();
+for(let i=0;i<70;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});
+(function t(){
+x.clearRect(0,0,w,h);
+x.fillStyle="rgba(108,124,255,.35)";
+p.forEach(o=>{
+o.x+=o.vx;o.y+=o.vy;
+if(o.x<0)o.x=w;if(o.y<0)o.y=h;
+if(o.x>w)o.x=0;if(o.y>h)o.y=0;
+x.fillRect(o.x,o.y,1,1)
+});
+requestAnimationFrame(t);
+})();
 </script>
-
 </body>
 </html>
